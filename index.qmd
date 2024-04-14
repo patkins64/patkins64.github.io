@@ -1,0 +1,15 @@
+---
+title: "Peter Atkins"
+image: "files/profile_pic.jpg"
+
+about:
+  template: jolla
+  links:
+    - icon: envelope
+      href: mailto:peteratkins11@gmail.com
+    - icon: linkedin
+      href: https://www.linkedin.com/in/peter-atkins-/
+---
+
+Welcome to my website!
+I am an Operations Manager at MD Revolution and an MBA Candidate at UCSD Rady School of Management. I am passionate about healthcare, finance, supply chain, technology, and entrepreneurship. I am excited to share my journey with you. Please feel free to reach out to me if you have any questions or would like to connect.

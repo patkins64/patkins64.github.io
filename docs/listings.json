@@ -1,0 +1,16 @@
+[
+  {
+    "listing": "/projects.html",
+    "items": [
+      "/projects/Project1/hw1_questions.html"
+    ]
+  },
+  {
+    "listing": "/patkins64.github.io/projects.html",
+    "items": [
+      "/patkins64.github.io/projects/Project2/index.html",
+      "/patkins64.github.io/docs/projects/Project1/index.html",
+      "/patkins64.github.io/docs/projects/Project2/index.html"
+    ]
+  }
+]
