@@ -155,9 +155,7 @@ print("Linear regression results:\n", results.summary())
 
 ```
 
-
-### Experimental Results
-
+###
 In the T-Test, my t-statistic = .0621, and my pvalue = .950. In the linear regression, the coefficient on the treatment variable is .0074, and the p-value is .950. Both results are the same, and they are not statistically significant at the 95% confidence level. This suggests that the treatment and control groups are balanced on the variable `mrm2`. The treatment has a negligible effect. This is consistent with the results in Table 1 of the paper, which shows that the treatment and control groups are balanced on all variables.
 
 t-test results: t-statistic = 0.062169999954557034 , p-value = 0.9504277199691156

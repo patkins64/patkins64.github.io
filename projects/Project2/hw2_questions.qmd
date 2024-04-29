@@ -1,0 +1,698 @@
+---
+title: "Poisson Regression Examples"
+author: "Peter Atkins"
+date: today
+callout-appearance: minimal # this hides the blue "i" icon on .callout-notes
+editor_options: 
+  chunk_output_type: console
+---
+
+
+## Blueprinty Case Study
+
+### Introduction
+
+Blueprinty is a small firm that makes software for developing blueprints specifically for submitting patent applications to the US patent office. Their marketing team would like to make the claim that patent applicants using Blueprinty's software are more successful in getting their patent applications approved. Ideal data to study such an effect might include the success rate of patent applications before using Blueprinty's software and after using it. Unfortunately, such data is not available. 
+
+However, Blueprinty has collected data on 1,500 mature (non-startup) engineering firms. The data include each firm's number of patents awarded over the last 5 years, regional location, age since incorporation, and whether or not the firm uses Blueprinty's software. The marketing team would like to use this data to make the claim that firms using Blueprinty's software are more successful in getting their patent applications approved.
+
+
+### Data
+
+_todo: Read in data._
+<details>
+<summary>Code</summary>
+
+```{python}
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
+import scipy.stats as stats
+from scipy.stats import ttest_ind
+import numpy as np
+from scipy.stats import norm
+from scipy.optimize import minimize
+from scipy.optimize import minimize_scalar
+
+airbnb_data = "/Users/peteratkins/Downloads/airbnb.csv"
+blueprinty_data = "/Users/peteratkins/Downloads/blueprinty.csv"
+
+
+df_airbnb = pd.read_csv(airbnb_data)
+df_blueprinty = pd.read_csv(blueprinty_data)
+df_blueprinty['iscustomer'] = df_blueprinty['iscustomer'].map({0: 'Not a Customer', 1: 'Is Customer'})
+
+
+
+print(df_airbnb)
+print(df_blueprinty)
+
+
+```
+
+### Histogram and Means of Number of Patents by Customer Status
+
+todo: Compare histograms and means of number of patents by customer status. What do you observe?_
+
+<details>
+<summary>Code</summary>
+
+```{python}
+import pandas as pd
+import matplotlib.pyplot as plt
+blueprinty_data = "/Users/peteratkins/Downloads/blueprinty.csv"
+df_blueprinty = pd.read_csv(blueprinty_data)
+df_blueprinty['iscustomer'] = df_blueprinty['iscustomer'].map({0: 'Not a Customer', 1: 'Is Customer'})
+
+means = df_blueprinty.groupby('iscustomer')['patents'].mean()
+
+print(means)
+
+for status in df_blueprinty['iscustomer'].unique():
+    plt.hist(df_blueprinty['patents'][df_blueprinty['iscustomer'] == status], alpha=0.5, label=status)
+
+plt.xlabel('Number of Patents')
+plt.ylabel('Frequency')
+plt.legend()
+plt.show()
+
+
+```
+
+###
+
+```{python}
+#| echo: False
+import pandas as pd
+import matplotlib.pyplot as plt
+blueprinty_data = "/Users/peteratkins/Downloads/blueprinty.csv"
+df_blueprinty = pd.read_csv(blueprinty_data)
+
+df_blueprinty['iscustomer'] = df_blueprinty['iscustomer'].map({0: 'Not a Customer', 1: 'Is Customer'})
+
+
+means = df_blueprinty.groupby('iscustomer')['patents'].mean()
+print(means)
+
+for status in df_blueprinty['iscustomer'].unique():
+    plt.hist(df_blueprinty['patents'][df_blueprinty['iscustomer'] == status], alpha=0.5, label=status)
+
+plt.xlabel('Number of Patents')
+plt.ylabel('Frequency')
+plt.legend()
+plt.show()
+
+unique_counts = df_blueprinty.groupby('iscustomer')['customer_id'].nunique()
+print(unique_counts)
+
+```
+
+The mean for the number of patents for 197 customers in this dataset is 4.1, while the mean for the number of patents for 1303 non-customers is 3.6. The histogram shows that the distribution of patents is similar for customers and non-customers. The number of customers is much smaller than the number of non-customers.
+
+
+### Regional and Age Differences by Customer Status
+
+Blueprinty customers are not selected at random. It may be important to account for systematic differences in the age and regional location of customers vs non-customers.
+
+_todo: Compare regions and ages by customer status. What do you observe?_
+
+###
+<details>
+<summary>Code</summary>
+
+```{python}
+
+import pandas as pd
+import matplotlib.pyplot as plt
+blueprinty_data = "/Users/peteratkins/Downloads/blueprinty.csv"
+df_blueprinty = pd.read_csv(blueprinty_data)
+df_blueprinty['iscustomer'] = df_blueprinty['iscustomer'].map({0: 'Not a Customer', 1: 'Is Customer'})
+
+mean_age = df_blueprinty.groupby(['iscustomer', 'region'])['age'].mean().reset_index()
+
+
+pivot_table = mean_age.pivot(index='region', columns='iscustomer', values='age')
+
+ax = pivot_table.plot(kind='bar')
+
+
+plt.ylabel('Mean Age')
+plt.title('Mean Age by Region and Customer Status')
+
+plt.xticks(rotation=0)
+
+ax.legend(loc='upper left', bbox_to_anchor=(1.05, 1))
+
+for p in ax.patches:
+    ax.annotate(format(p.get_height(), '.1f'), 
+                (p.get_x() + p.get_width() / 3., p.get_height()), 
+                ha = 'center', va = 'center', 
+                xytext = (0, 5), 
+                textcoords = 'offset points')
+
+plt.show()
+
+```
+
+###
+
+```{python}
+#| echo: False
+import pandas as pd
+import matplotlib.pyplot as plt
+blueprinty_data = "/Users/peteratkins/Downloads/blueprinty.csv"
+df_blueprinty = pd.read_csv(blueprinty_data)
+df_blueprinty['iscustomer'] = df_blueprinty['iscustomer'].map({0: 'Not a Customer', 1: 'Is Customer'})
+
+mean_age = df_blueprinty.groupby(['iscustomer', 'region'])['age'].mean().reset_index()
+
+
+pivot_table = mean_age.pivot(index='region', columns='iscustomer', values='age')
+
+ax = pivot_table.plot(kind='bar')
+
+
+plt.ylabel('Mean Age')
+plt.title('Mean Age by Region and Customer Status')
+
+plt.xticks(rotation=0)
+
+ax.legend(loc='upper left', bbox_to_anchor=(1, 1))
+
+for p in ax.patches:
+    ax.annotate(format(p.get_height(), '.1f'), 
+                (p.get_x() + p.get_width() / 3., p.get_height()), 
+                ha = 'center', va = 'center', 
+                xytext = (0, 5), 
+                textcoords = 'offset points')
+
+plt.show()
+
+```
+
+Despite the region, customers tend to be younger than non-customers. This could be due to the fact that younger firms are more willing to invest in software like Blueprinty's. The age difference is most pronounced in the Midwest and Northwest regions. The age difference is smallest in the Southwest region.
+
+### Estimation of Simple Poisson Model
+
+Since our outcome variable of interest can only be small integer values per a set unit of time, we can use a Poisson density to model the number of patents awarded to each engineering firm over the last 5 years. We start by estimating a simple Poisson model via Maximum Likelihood.
+
+_todo: Write down mathematically the likelihood for_ $Y \sim \text{Poisson}(\lambda)$. Note that $f(Y|\lambda) = e^{-\lambda}\lambda^Y/Y!$.
+<details>
+<summary>Code</summary>
+
+```{python}
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+from scipy.stats import poisson
+blueprinty_data = "/Users/peteratkins/Downloads/blueprinty.csv"
+df_blueprinty = pd.read_csv(blueprinty_data)
+df_blueprinty['iscustomer'] = df_blueprinty['iscustomer'].map({0: 'Not a Customer', 1: 'Is Customer'})
+
+# Lambda = mean of Y
+
+lambda_ = round(df_blueprinty['patents'].mean(),6)
+
+#likelihoods of each record
+likelihoods = poisson.pmf(df_blueprinty['patents'], lambda_)
+
+total_likelihood = np.prod(likelihoods)
+
+print(f"Estimated Lambda = {lambda_}")
+print(f"Likelihoods = {likelihoods}")
+print(f"Total Likelihood = {total_likelihood}")
+
+formula = "$$L(\lambda|Y) = \prod_{i=1}^{n} f(y_i|\lambda) = \prod_{i=1}^{n} e^{-\lambda} \frac{\lambda^{y_i}}{y_i!}$$"
+
+print(f"Likelihood for $y\sim\text(poisson)(\lambda)$formula) = {formula}")
+
+```
+
+###
+```{python}
+#| echo: False
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+from scipy.stats import poisson
+blueprinty_data = "/Users/peteratkins/Downloads/blueprinty.csv"
+df_blueprinty = pd.read_csv(blueprinty_data)
+df_blueprinty['iscustomer'] = df_blueprinty['iscustomer'].map({0: 'Not a Customer', 1: 'Is Customer'})
+
+# Lambda = mean of Y
+
+lambda_ = round(df_blueprinty['patents'].mean(),6)
+
+#likelihoods of each record
+likelihoods = poisson.pmf(df_blueprinty['patents'], lambda_)
+
+total_likelihood = np.prod(likelihoods)
+
+print(f"Estimated Lambda = {lambda_}")
+print(f"Likelihoods = {likelihoods}")
+print(f"Total Likelihood = {total_likelihood}")
+
+formula = "$$L(\lambda|Y) = \prod_{i=1}^{n} f(y_i|\lambda) = \prod_{i=1}^{n} e^{-\lambda} \frac{\lambda^{y_i}}{y_i!}$$"
+
+print(f"Likelihood for $y\sim\text(poisson)(\lambda)$formula) = {formula}")
+```
+
+
+### Log-Likelihoods
+_todo: Code the likelihood (or log-likelihood) function for the Poisson model. This is a function of lambda and Y. For example:_ poisson_loglikelihood <- function(lambda, Y)...
+
+<details>
+<summary>Code</summary>
+
+```{python}
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+from scipy.stats import poisson
+blueprinty_data = "/Users/peteratkins/Downloads/blueprinty.csv"
+df_blueprinty = pd.read_csv(blueprinty_data)
+df_blueprinty['iscustomer'] = df_blueprinty['iscustomer'].map({0: 'Not a Customer', 1: 'Is Customer'})
+
+# Lambda = mean of Y
+
+lambda_ = round(df_blueprinty['patents'].mean(),6)
+
+log_likelihoods = poisson.logpmf(df_blueprinty['patents'], lambda_)
+total_log_likelihood = np.sum(log_likelihoods)
+print(f"Total Log Likelihood = {total_log_likelihood}")
+
+
+```
+
+### 
+```{python}
+#| echo: False
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+from scipy.stats import poisson
+blueprinty_data = "/Users/peteratkins/Downloads/blueprinty.csv"
+df_blueprinty = pd.read_csv(blueprinty_data)
+df_blueprinty['iscustomer'] = df_blueprinty['iscustomer'].map({0: 'Not a Customer', 1: 'Is Customer'})
+
+# Lambda = mean of Y
+
+lambda_ = round(df_blueprinty['patents'].mean(),6)
+
+log_likelihoods = poisson.logpmf(df_blueprinty['patents'], lambda_)
+total_log_likelihood = np.sum(log_likelihoods)
+print(f"Total Log Likelihood = {total_log_likelihood}")
+```
+
+### lambda vs. Likelihood
+_todo: Use your function to plot lambda on the horizontal axis and the likelihood (or log-likelihood) on the vertical axis for a range of lambdas (use the observed number of patents as the input for Y)._
+
+
+<details>
+<summary>Code</summary>
+
+```{python}
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+from scipy.stats import poisson
+blueprinty_data = "/Users/peteratkins/Downloads/blueprinty.csv"
+df_blueprinty = pd.read_csv(blueprinty_data)
+df_blueprinty['iscustomer'] = df_blueprinty['iscustomer'].map({0: 'Not a Customer', 1: 'Is Customer'})
+lambda_ = round(df_blueprinty['patents'].mean(),6)
+
+## Range of lambdas
+lambdas = np.linspace(0, df_blueprinty['patents'].max(), 100)
+
+## log-likelihoods for each lambda
+log_likelihoods = [np.sum(poisson.logpmf(df_blueprinty['patents'], lambda_)) for lambda_ in lambdas]
+
+# Plot lambda vs log-likelihood
+plt.figure(figsize=(10, 6))
+plt.plot(lambdas, log_likelihoods, marker='o')
+plt.xlabel('Lambda')
+plt.ylabel('Log-Likelihood')
+plt.title('Log-Likelihood for Different Lambda Values')
+plt.grid(True)
+plt.show()
+
+```
+
+###
+```{python}
+#| echo: False
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+from scipy.stats import poisson
+blueprinty_data = "/Users/peteratkins/Downloads/blueprinty.csv"
+df_blueprinty = pd.read_csv(blueprinty_data)
+df_blueprinty['iscustomer'] = df_blueprinty['iscustomer'].map({0: 'Not a Customer', 1: 'Is Customer'})
+lambda_ = round(df_blueprinty['patents'].mean(),6)
+
+## Range of lambdas
+lambdas = np.linspace(0, df_blueprinty['patents'].max(), 100)
+
+## log-likelihoods for each lambda
+log_likelihoods = [np.sum(poisson.logpmf(df_blueprinty['patents'], lambda_)) for lambda_ in lambdas]
+
+# Plot lambda vs log-likelihood
+plt.figure(figsize=(10, 6))
+plt.plot(lambdas, log_likelihoods, marker='o')
+plt.xlabel('Lambda')
+plt.ylabel('Log-Likelihood')
+plt.title('Log-Likelihood for Different Lambda Values')
+plt.grid(True)
+plt.show()
+
+
+```
+
+### MLE Estimation via likelihood optimization
+
+_todo: Find the MLE by optimizing your likelihood function with optim() in R or sp.optimize() in Python._
+
+###
+<details>
+<summary>Code</summary>
+
+```{python}
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+from scipy.stats import poisson
+from scipy.optimize import minimize
+blueprinty_data = "/Users/peteratkins/Downloads/blueprinty.csv"
+df_blueprinty = pd.read_csv(blueprinty_data)
+df_blueprinty['iscustomer'] = df_blueprinty['iscustomer'].map({0: 'Not a Customer', 1: 'Is Customer'})
+
+lambda_ = round(df_blueprinty['patents'].mean(),6)
+
+## Range of lambdas
+lambdas = np.linspace(0, df_blueprinty['patents'].max(), 100)
+
+## log-likelihoods for each lambda
+log_likelihoods = [np.sum(poisson.logpmf(df_blueprinty['patents'], lambda_)) for lambda_ in lambdas]
+
+## negative log-likelihood
+def neg_log_likelihood(lambda_, Y):
+    return -np.sum(poisson.logpmf(Y, lambda_))
+
+## MLE
+mle = minimize(neg_log_likelihood, lambda_, args=(df_blueprinty['patents']))
+
+print(F"MLE for Lambda: {mle.x[0]}")
+
+
+```
+
+###
+```{python}
+#| echo: False
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+from scipy.stats import poisson
+from scipy.optimize import minimize
+blueprinty_data = "/Users/peteratkins/Downloads/blueprinty.csv"
+df_blueprinty = pd.read_csv(blueprinty_data)
+df_blueprinty['iscustomer'] = df_blueprinty['iscustomer'].map({0: 'Not a Customer', 1: 'Is Customer'})
+
+lambda_ = round(df_blueprinty['patents'].mean(),6)
+
+## Range of lambdas
+lambdas = np.linspace(0, df_blueprinty['patents'].max(), 100)
+
+## log-likelihoods for each lambda
+log_likelihoods = [np.sum(poisson.logpmf(df_blueprinty['patents'], lambda_)) for lambda_ in lambdas]
+
+## negative log-likelihood
+def neg_log_likelihood(lambda_, Y):
+    return -np.sum(poisson.logpmf(Y, lambda_))
+
+## MLE
+mle = minimize(neg_log_likelihood, lambda_, args=(df_blueprinty['patents']))
+
+print(F"MLE for Lambda: {mle.x[0]}")
+```
+
+### Estimation of Poisson Regression Model
+
+Next, we extend our simple Poisson model to a Poisson Regression Model such that $Y_i = \text{Poisson}(\lambda_i)$ where $\lambda_i = \exp(X_i'\beta)$. The interpretation is that the success 
+rate of patent awards is not constant across all firms ($\lambda$) but rather is a function of firm characteristics $X_i$. Specifically, we will use the covariates age, age squared, region, and 
+whether the firm is a customer of Blueprinty.
+
+_todo: Update your likelihood or log-likelihood function with an additional argument to take in a covariate matrix X. Also change the parameter of the model from lambda to the beta vector. 
+In this model, lambda must be a positive number, so we choose the inverse link function g() to be exp() so that_ $\lambda_i = e^{X_i'\beta}$. _For example:_ poisson_regression_likelihood <- function(beta, Y, X)...
+
+<details>
+<summary>Code</summary>
+
+```{python}
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+from scipy.stats import poisson
+from scipy.optimize import minimize
+
+blueprinty_data = "/Users/peteratkins/Downloads/blueprinty.csv"
+df_blueprinty = pd.read_csv(blueprinty_data)
+df_blueprinty['iscustomer'] = df_blueprinty['iscustomer'].map({0: 'Not a Customer', 1: 'Is Customer'})
+df_blueprinty['age2'] = df_blueprinty['age']**2
+df_blueprinty = pd.get_dummies(df_blueprinty, columns=['region', 'iscustomer'])
+Y = df_blueprinty['patents']
+X = df_blueprinty.drop('patents', axis=1)
+
+X_standardized = (X - X.mean()) / X.std()
+
+beta_initial = np.zeros(X.shape[1])
+
+def poisson_regression_loglikelihood(beta, Y, X):
+    X_dot_beta = np.dot(X, beta)
+    X_dot_beta = np.float64(X_dot_beta)  
+    lambda_ = np.exp(X_dot_beta)
+    log_likelihood = np.sum(poisson.logpmf(Y, lambda_))
+    return -log_likelihood
+
+result = minimize(poisson_regression_loglikelihood, beta_initial, args=(Y, X_standardized))
+
+print(f"Estimated betas: {result.x}")
+
+
+```
+
+
+
+###
+```{python}
+
+#| echo: False
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+from scipy.stats import poisson
+from scipy.optimize import minimize
+
+blueprinty_data = "/Users/peteratkins/Downloads/blueprinty.csv"
+df_blueprinty = pd.read_csv(blueprinty_data)
+df_blueprinty['iscustomer'] = df_blueprinty['iscustomer'].map({0: 'Not a Customer', 1: 'Is Customer'})
+df_blueprinty['age2'] = df_blueprinty['age']**2
+df_blueprinty = pd.get_dummies(df_blueprinty, columns=['region', 'iscustomer'])
+Y = df_blueprinty['patents']
+X = df_blueprinty.drop('patents', axis=1)
+
+X_standardized = (X - X.mean()) / X.std()
+
+beta_initial = np.zeros(X.shape[1])
+
+def poisson_regression_loglikelihood(beta, Y, X):
+    X_dot_beta = np.dot(X, beta)
+    X_dot_beta = np.float64(X_dot_beta)  
+    lambda_ = np.exp(X_dot_beta)
+    log_likelihood = np.sum(poisson.logpmf(Y, lambda_))
+    return -log_likelihood
+
+
+result = minimize(poisson_regression_loglikelihood, beta_initial, args=(Y, X_standardized))
+
+
+print(f"Estimated betas: {result.x}")
+
+```
+
+
+
+### Standard Errors using  Python sm.GLM() function
+
+_todo: Use your function along with R's optim() or Python's sp.optimize() to find the MLE vector and the Hessian of the Poisson model with covariates. Specifically, the first column of X should be all 1's to enable a constant term in the model, and the subsequent columns should be age, age squared, binary variables for all but one of the regions, and the binary customer variable. Use the Hessian to find standard errors of the beta parameter estimates and present a table of coefficients and standard errors._
+
+<details>
+<summary>Code</summary>
+
+```{python}
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+
+df_blueprinty = pd.read_csv("/Users/peteratkins/Downloads/blueprinty.csv")
+
+df_blueprinty['iscustomer'] = df_blueprinty['iscustomer'].map({0: 'Not a Customer', 1: 'Is Customer'})
+df_blueprinty['age2'] = df_blueprinty['age']**2
+
+df_blueprinty = pd.get_dummies(df_blueprinty, columns=['region', 'iscustomer'])
+
+for col in df_blueprinty.select_dtypes(include='bool').columns:
+    df_blueprinty[col] = df_blueprinty[col].astype('int64')
+
+Y = df_blueprinty['patents']
+X = df_blueprinty.drop('patents', axis=1)
+
+X = sm.add_constant(X)
+
+poisson_model = sm.GLM(Y, X, family=sm.families.Poisson()).fit()
+
+print(poisson_model.summary())
+
+```
+
+###
+```{python}
+#| echo: False
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+
+
+df_blueprinty = pd.read_csv("/Users/peteratkins/Downloads/blueprinty.csv")
+
+df_blueprinty['iscustomer'] = df_blueprinty['iscustomer'].map({0: 'Not a Customer', 1: 'Is Customer'})
+df_blueprinty['age2'] = df_blueprinty['age']**2
+
+
+df_blueprinty = pd.get_dummies(df_blueprinty, columns=['region', 'iscustomer'])
+
+
+for col in df_blueprinty.select_dtypes(include='bool').columns:
+    df_blueprinty[col] = df_blueprinty[col].astype('int64')
+
+Y = df_blueprinty['patents']
+X = df_blueprinty.drop('patents', axis=1)
+
+X = sm.add_constant(X)
+
+poisson_model = sm.GLM(Y, X, family=sm.families.Poisson()).fit()
+
+
+print(poisson_model.summary())
+```
+
+
+### Interpretation of Results
+Age, age squared, and the region of the firm do not have a significant effect on the number of patents awarded. However, being a customer of Blueprinty has a significant positive effect on the number of patents awarded. The coefficient for the customer variable is 0.2, which means that firms using Blueprinty's software are expected to have 1.22 times more patents awarded than firms not using Blueprinty's software, holding all other variables constant.
+
+
+## AirBnB Case Study
+
+### Introduction
+
+AirBnB is a popular platform for booking short-term rentals. In March 2017, students Annika Awad, Evan Lebo, and Anna Linden scraped of 40,000 Airbnb listings from New York City.  The data include the following variables:
+
+:::: {.callout-note collapse="true"}
+### Variable Definitions
+
+    - `id` = unique ID number for each unit
+    - `last_scraped` = date when information scraped
+    - `host_since` = date when host first listed the unit on Airbnb
+    - `days` = `last_scraped` - `host_since` = number of days the unit has been listed
+    - `room_type` = Entire home/apt., Private room, or Shared room
+    - `bathrooms` = number of bathrooms
+    - `bedrooms` = number of bedrooms
+    - `price` = price per night (dollars)
+    - `number_of_reviews` = number of reviews for the unit on Airbnb
+    - `review_scores_cleanliness` = a cleanliness score from reviews (1-10)
+    - `review_scores_location` = a "quality of location" score from reviews (1-10)
+    - `review_scores_value` = a "quality of value" score from reviews (1-10)
+    - `instant_bookable` = "t" if instantly bookable, "f" if not
+
+::::
+
+
+_todo: Assume the number of reviews is a good proxy for the number of bookings. Perform some exploratory data analysis to get a feel for the data, handle or drop observations with missing values on relevant variables, build one or more models (e.g., a poisson regression model for the number of bookings as proxied by the number of reviews), and interpret model coefficients to describe variation in the number of reviews as a function of the variables provided._
+
+
+### Summary of Results
+<details>
+<summary>Code</summary>
+
+```{python}
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+import matplotlib.pyplot as plt
+
+df = pd.read_csv("/Users/peteratkins/Downloads/airbnb.csv")
+df_airbnb = df.dropna()
+df_airbnb['days'] = (pd.to_datetime(df_airbnb['last_scraped']) - pd.to_datetime(df_airbnb['host_since'])).dt.days
+df_airbnb['instant_bookable'] = df_airbnb['instant_bookable'].map({'t': 1, 'f': 0})
+df_airbnb['room_type'] = df_airbnb['room_type'].map({'Entire home/apt': 0, 'Private room': 1, 'Shared room': 2})
+
+print(df_airbnb.describe())
+
+# Plot histograms for each variable
+df_airbnb[['days', 'bathrooms', 'bedrooms', 'price', 'number_of_reviews', 'review_scores_cleanliness', 'review_scores_location', 'review_scores_value']].hist(bins=30, figsize=(15, 10))
+plt.tight_layout()
+plt.show()
+
+X = df_airbnb.drop(['id', 'last_scraped', 'host_since', 'number_of_reviews'], axis=1)
+y = df_airbnb['number_of_reviews']
+
+# Add a constant to the independent variables matrix
+X = sm.add_constant(X)
+
+# Build the Poisson regression model
+poisson_model = sm.GLM(y, X, family=sm.families.Poisson()).fit()
+
+# Print the summary of the model
+print(poisson_model.summary())
+
+```
+
+### 
+```{python}
+#| echo: False
+
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+import matplotlib.pyplot as plt
+
+df = pd.read_csv("/Users/peteratkins/Downloads/airbnb.csv")
+df_airbnb = df.dropna().copy()
+df_airbnb['days'] = (pd.to_datetime(df_airbnb['last_scraped']) - pd.to_datetime(df_airbnb['host_since'])).dt.days
+df_airbnb['instant_bookable'] = df_airbnb['instant_bookable'].map({'t': 1, 'f': 0})
+df_airbnb['room_type'] = df_airbnb['room_type'].map({'Entire home/apt': 0, 'Private room': 1, 'Shared room': 2})
+
+# Plot histograms for each variable
+df_airbnb[['days', 'bathrooms', 'bedrooms', 'price', 'number_of_reviews', 'review_scores_cleanliness', 'review_scores_location', 'review_scores_value']].hist(bins=30, figsize=(15, 10))
+plt.tight_layout()
+plt.show()
+
+X = df_airbnb.drop(['id', 'last_scraped', 'host_since', 'number_of_reviews'], axis=1)
+y = df_airbnb['number_of_reviews']
+
+# Add a constant to the independent variables matrix
+X = sm.add_constant(X)
+
+# Build the Poisson regression model
+poisson_model = sm.GLM(y, X, family=sm.families.Poisson()).fit()
+
+# Print the summary of the model
+print(poisson_model.summary())
+```
+
+### interpretation of Results
+The Poisson regression model shows that the number of reviews is significantly associated with the number of days the unit has been listed, the number of bedrooms, the price, and the cleanliness score. The number of reviews is expected to increase by 0.0002 for each additional day the unit has been listed, by 0.2 for each additional bedroom, by 0.0001 for each additional dollar in price, and by 0.1 for each additional cleanliness score. The number of reviews is not significantly associated with the number of bathrooms, the quality of location score, the quality of value score, the room type, or whether the unit is instantly bookable.
+
+

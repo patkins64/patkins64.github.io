@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Peter Atkins">
-<meta name="dcterms.date" content="2024-04-14">
+<meta name="dcterms.date" content="2024-04-28">
 
 <title>Peter Atkins - A Replication of Karlan and List (2007)</title>
 <style>
@@ -158,35 +158,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#balance-test" id="toc-balance-test" class="nav-link" data-scroll-target="#balance-test">Balance Test</a></li>
   <li><a href="#t-test-and-linear-regression" id="toc-t-test-and-linear-regression" class="nav-link" data-scroll-target="#t-test-and-linear-regression">T-Test and Linear Regression</a></li>
-  <li><a href="#experimental-results" id="toc-experimental-results" class="nav-link" data-scroll-target="#experimental-results">Experimental Results</a></li>
+  <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section"></a></li>
   <li><a href="#linear-regression-results" id="toc-linear-regression-results" class="nav-link" data-scroll-target="#linear-regression-results">Linear regression results:</a></li>
   <li><a href="#charitable-contribution-made" id="toc-charitable-contribution-made" class="nav-link" data-scroll-target="#charitable-contribution-made">Charitable Contribution Made</a></li>
   <li><a href="#bar-plot---proportion-of-people-who-donated-by-treatment-group" id="toc-bar-plot---proportion-of-people-who-donated-by-treatment-group" class="nav-link" data-scroll-target="#bar-plot---proportion-of-people-who-donated-by-treatment-group">Bar Plot - Proportion of People Who Donated by Treatment Group</a></li>
   <li><a href="#t-test-results---treatmentcontrol-on-charitable-donation---bianary" id="toc-t-test-results---treatmentcontrol-on-charitable-donation---bianary" class="nav-link" data-scroll-target="#t-test-results---treatmentcontrol-on-charitable-donation---bianary">T-Test Results - Treatment/Control on Charitable Donation - Bianary</a></li>
-  <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section"></a></li>
-  <li><a href="#bivarariate-linear-regression---treatmentcontrol-on-charitable-donation" id="toc-bivarariate-linear-regression---treatmentcontrol-on-charitable-donation" class="nav-link" data-scroll-target="#bivarariate-linear-regression---treatmentcontrol-on-charitable-donation">Bivarariate linear regression - Treatment/Control on Charitable Donation</a></li>
   <li><a href="#section-1" id="toc-section-1" class="nav-link" data-scroll-target="#section-1"></a></li>
+  <li><a href="#bivarariate-linear-regression---treatmentcontrol-on-charitable-donation" id="toc-bivarariate-linear-regression---treatmentcontrol-on-charitable-donation" class="nav-link" data-scroll-target="#bivarariate-linear-regression---treatmentcontrol-on-charitable-donation">Bivarariate linear regression - Treatment/Control on Charitable Donation</a></li>
   <li><a href="#section-2" id="toc-section-2" class="nav-link" data-scroll-target="#section-2"></a></li>
-  <li><a href="#regression---treatment-on-charitable-donation" id="toc-regression---treatment-on-charitable-donation" class="nav-link" data-scroll-target="#regression---treatment-on-charitable-donation">Regression - Treatment on Charitable Donation</a></li>
   <li><a href="#section-3" id="toc-section-3" class="nav-link" data-scroll-target="#section-3"></a></li>
-  <li><a href="#t-test-results---11-match-and-21-match" id="toc-t-test-results---11-match-and-21-match" class="nav-link" data-scroll-target="#t-test-results---11-match-and-21-match">T-Test Results - 1:1 Match and 2:1 Match</a></li>
+  <li><a href="#regression---treatment-on-charitable-donation" id="toc-regression---treatment-on-charitable-donation" class="nav-link" data-scroll-target="#regression---treatment-on-charitable-donation">Regression - Treatment on Charitable Donation</a></li>
   <li><a href="#section-4" id="toc-section-4" class="nav-link" data-scroll-target="#section-4"></a></li>
-  <li><a href="#regressing-on-ratios" id="toc-regressing-on-ratios" class="nav-link" data-scroll-target="#regressing-on-ratios">Regressing on Ratios</a></li>
+  <li><a href="#t-test-results---11-match-and-21-match" id="toc-t-test-results---11-match-and-21-match" class="nav-link" data-scroll-target="#t-test-results---11-match-and-21-match">T-Test Results - 1:1 Match and 2:1 Match</a></li>
   <li><a href="#section-5" id="toc-section-5" class="nav-link" data-scroll-target="#section-5"></a></li>
+  <li><a href="#regressing-on-ratios" id="toc-regressing-on-ratios" class="nav-link" data-scroll-target="#regressing-on-ratios">Regressing on Ratios</a></li>
   <li><a href="#section-6" id="toc-section-6" class="nav-link" data-scroll-target="#section-6"></a></li>
+  <li><a href="#section-7" id="toc-section-7" class="nav-link" data-scroll-target="#section-7"></a></li>
   <li><a href="#response-rate-and-coefficient-difference-between-ratios" id="toc-response-rate-and-coefficient-difference-between-ratios" class="nav-link" data-scroll-target="#response-rate-and-coefficient-difference-between-ratios">Response Rate and Coefficient Difference between Ratios</a></li>
   <li><a href="#treatment-effect-on-size-of-charitable-contribution" id="toc-treatment-effect-on-size-of-charitable-contribution" class="nav-link" data-scroll-target="#treatment-effect-on-size-of-charitable-contribution">Treatment effect on Size of Charitable Contribution</a></li>
-  <li><a href="#section-7" id="toc-section-7" class="nav-link" data-scroll-target="#section-7"></a></li>
+  <li><a href="#section-8" id="toc-section-8" class="nav-link" data-scroll-target="#section-8"></a></li>
   <li><a href="#filtered-regression-results---treatment-on-charitable-donation-amount---conditional" id="toc-filtered-regression-results---treatment-on-charitable-donation-amount---conditional" class="nav-link" data-scroll-target="#filtered-regression-results---treatment-on-charitable-donation-amount---conditional">Filtered Regression Results - Treatment on Charitable Donation Amount - Conditional</a></li>
   <li><a href="#histogram-of-charitable-donation-amounts-by-treatment-group" id="toc-histogram-of-charitable-donation-amounts-by-treatment-group" class="nav-link" data-scroll-target="#histogram-of-charitable-donation-amounts-by-treatment-group">Histogram of Charitable Donation Amounts by Treatment Group</a></li>
-  <li><a href="#section-8" id="toc-section-8" class="nav-link" data-scroll-target="#section-8"></a></li>
+  <li><a href="#section-9" id="toc-section-9" class="nav-link" data-scroll-target="#section-9"></a></li>
   </ul></li>
   <li><a href="#simulation-experiment" id="toc-simulation-experiment" class="nav-link" data-scroll-target="#simulation-experiment">Simulation Experiment</a>
   <ul class="collapse">
   <li><a href="#law-of-large-numbers" id="toc-law-of-large-numbers" class="nav-link" data-scroll-target="#law-of-large-numbers">Law of Large Numbers</a></li>
-  <li><a href="#section-9" id="toc-section-9" class="nav-link" data-scroll-target="#section-9"></a></li>
-  <li><a href="#central-limit-theorem" id="toc-central-limit-theorem" class="nav-link" data-scroll-target="#central-limit-theorem">Central Limit Theorem</a></li>
   <li><a href="#section-10" id="toc-section-10" class="nav-link" data-scroll-target="#section-10"></a></li>
+  <li><a href="#central-limit-theorem" id="toc-central-limit-theorem" class="nav-link" data-scroll-target="#central-limit-theorem">Central Limit Theorem</a></li>
+  <li><a href="#section-11" id="toc-section-11" class="nav-link" data-scroll-target="#section-11"></a></li>
   </ul></li>
   </ul>
 </nav>
@@ -213,7 +213,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">April 14, 2024</p>
+      <p class="date">April 28, 2024</p>
     </div>
   </div>
   
@@ -238,7 +238,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <summary>
 Code
 </summary>
-<div id="fcc48b3e" class="cell" data-execution_count="1">
+<div id="4768f27e" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.ticker <span class="im">as</span> mtick</span>
@@ -267,7 +267,7 @@ Code
 <summary>
 Data
 </summary>
-<div id="54032044" class="cell" data-execution_count="2">
+<div id="90d887bf" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Print all rows</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df_dropna)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -561,7 +561,7 @@ Variable Definitions
 <summary>
 Code
 </summary>
-<div id="e201e157" class="cell" data-execution_count="3">
+<div id="642ebdcb" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Separate the data into treatment and control groups</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>treatment_group <span class="op">=</span> df_dropna[df_dropna[<span class="st">'treatment'</span>] <span class="op">==</span> <span class="dv">1</span>][<span class="st">'mrm2'</span>]</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>control_group <span class="op">=</span> df_dropna[df_dropna[<span class="st">'treatment'</span>] <span class="op">==</span> <span class="dv">0</span>][<span class="st">'mrm2'</span>]</span>
@@ -584,8 +584,8 @@ Linear regression results:
 Dep. Variable:                   mrm2   R-squared:                       0.000
 Model:                            OLS   Adj. R-squared:                 -0.000
 Method:                 Least Squares   F-statistic:                  0.003865
-Date:                Sun, 14 Apr 2024   Prob (F-statistic):              0.950
-Time:                        13:29:35   Log-Likelihood:            -1.8175e+05
+Date:                Sun, 28 Apr 2024   Prob (F-statistic):              0.950
+Time:                        14:59:13   Log-Likelihood:            -1.8175e+05
 No. Observations:               46513   AIC:                         3.635e+05
 Df Residuals:                   46511   BIC:                         3.635e+05
 Df Model:                           1                                         
@@ -607,22 +607,22 @@ Notes:
 </div>
 </div>
 </details></section>
-<section id="experimental-results" class="level3">
-<h3 class="anchored" data-anchor-id="experimental-results">Experimental Results</h3>
+<section id="section" class="level3">
+<h3 class="anchored" data-anchor-id="section"></h3>
 <p>In the T-Test, my t-statistic = .0621, and my pvalue = .950. In the linear regression, the coefficient on the treatment variable is .0074, and the p-value is .950. Both results are the same, and they are not statistically significant at the 95% confidence level. This suggests that the treatment and control groups are balanced on the variable <code>mrm2</code>. The treatment has a negligible effect. This is consistent with the results in Table 1 of the paper, which shows that the treatment and control groups are balanced on all variables.</p>
 <p>t-test results: t-statistic = 0.062169999954557034 , p-value = 0.9504277199691156</p>
 </section>
 <section id="linear-regression-results" class="level3">
 <h3 class="anchored" data-anchor-id="linear-regression-results">Linear regression results:</h3>
-<div id="8d7c983d" class="cell" data-execution_count="4">
+<div id="f2179fe6" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-stdout">
 <pre><code>                            OLS Regression Results                            
 ==============================================================================
 Dep. Variable:                   mrm2   R-squared:                       0.000
 Model:                            OLS   Adj. R-squared:                 -0.000
 Method:                 Least Squares   F-statistic:                  0.003865
-Date:                Sun, 14 Apr 2024   Prob (F-statistic):              0.950
-Time:                        13:29:36   Log-Likelihood:            -1.8175e+05
+Date:                Sun, 28 Apr 2024   Prob (F-statistic):              0.950
+Time:                        14:59:13   Log-Likelihood:            -1.8175e+05
 No. Observations:               46513   AIC:                         3.635e+05
 Df Residuals:                   46511   BIC:                         3.635e+05
 Df Model:                           1                                         
@@ -652,7 +652,7 @@ Notes:
 <summary>
 Code
 </summary>
-<div id="283c7803" class="cell" data-execution_count="5">
+<div id="20b1d280" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>treatment_donated <span class="op">=</span> df_dropna[(df_dropna[<span class="st">'treatment'</span>] <span class="op">==</span> <span class="dv">1</span>) <span class="op">&amp;</span> (df_dropna[<span class="st">'gave'</span>] <span class="op">==</span> <span class="dv">1</span>)].shape[<span class="dv">0</span>]</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(treatment_donated)</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -698,7 +698,7 @@ Control Donation Rate: 0.88%</code></pre>
 </details></section>
 <section id="bar-plot---proportion-of-people-who-donated-by-treatment-group" class="level3">
 <h3 class="anchored" data-anchor-id="bar-plot---proportion-of-people-who-donated-by-treatment-group">Bar Plot - Proportion of People Who Donated by Treatment Group</h3>
-<div id="3b44c08d" class="cell" data-execution_count="6">
+<div id="a5cc6f04" class="cell" data-execution_count="6">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -715,16 +715,16 @@ Control Donation Rate: 0.88%</code></pre>
 <summary>
 Code
 </summary>
-<div id="8a6e0736" class="cell" data-execution_count="7">
+<div id="f6e6a0fc" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>treatment_group2 <span class="op">=</span> df_dropna[df_dropna[<span class="st">'treatment'</span>] <span class="op">==</span> <span class="dv">1</span>][<span class="st">'gave'</span>]</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>control_group2 <span class="op">=</span> df_dropna[df_dropna[<span class="st">'treatment'</span>] <span class="op">==</span> <span class="dv">0</span>][<span class="st">'gave'</span>]</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>t_stat, p_value <span class="op">=</span> stats.ttest_ind(treatment_group2, control_group2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </details></section>
-<section id="section" class="level3">
-<h3 class="anchored" data-anchor-id="section"></h3>
-<div id="1434f9db" class="cell" data-execution_count="8">
+<section id="section-1" class="level3">
+<h3 class="anchored" data-anchor-id="section-1"></h3>
+<div id="974d43a1" class="cell" data-execution_count="8">
 <div class="cell-output cell-output-stdout">
 <pre><code>t-test results: t-statistic = 3.4520847762481726 , p-value = 0.000556767190968193</code></pre>
 </div>
@@ -737,7 +737,7 @@ Code
 <summary>
 Code
 </summary>
-<div id="51d61df4" class="cell" data-execution_count="9">
+<div id="772183ae" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform a linear regression on Treatment</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>treatmentdonation <span class="op">=</span> <span class="st">'gave ~ treatment'</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -745,17 +745,17 @@ Code
 <span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>treatmentdonationmodel <span class="op">=</span> smf.ols(treatmentdonation, data<span class="op">=</span>df_dropna).fit()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </details></section>
-<section id="section-1" class="level3">
-<h3 class="anchored" data-anchor-id="section-1"></h3>
-<div id="6fef4d7d" class="cell" data-execution_count="10">
+<section id="section-2" class="level3">
+<h3 class="anchored" data-anchor-id="section-2"></h3>
+<div id="f0f58683" class="cell" data-execution_count="10">
 <div class="cell-output cell-output-stdout">
 <pre><code>                            OLS Regression Results                            
 ==============================================================================
 Dep. Variable:                   gave   R-squared:                       0.000
 Model:                            OLS   Adj. R-squared:                  0.000
 Method:                 Least Squares   F-statistic:                     11.92
-Date:                Sun, 14 Apr 2024   Prob (F-statistic):           0.000557
-Time:                        13:29:36   Log-Likelihood:                 24504.
+Date:                Sun, 28 Apr 2024   Prob (F-statistic):           0.000557
+Time:                        14:59:13   Log-Likelihood:                 24504.
 No. Observations:               46513   AIC:                        -4.900e+04
 Df Residuals:                   46511   BIC:                        -4.899e+04
 Df Model:                           1                                         
@@ -777,15 +777,15 @@ Notes:
 </div>
 </div>
 </section>
-<section id="section-2" class="level3">
-<h3 class="anchored" data-anchor-id="section-2"></h3>
+<section id="section-3" class="level3">
+<h3 class="anchored" data-anchor-id="section-3"></h3>
 <p>The P-Value of &lt; .05 indicates that the treatment group had a statistically significant higher rate of charitable donations than the control group. This suggests that the treatment group was more likely to donate than the control group. This is consistent with the results in Table 2a Panel A of the paper, which shows that the treatment group had a higher rate of charitable donations than the control group.</p>
 <p><em>todo: run a probit regression where the outcome variable is whether any charitable donation was made and the explanatory variable is assignment to treatment or control. Confirm that your results replicate Table 3 column 1 in the paper.</em></p>
 <details>
 <summary>
 Code
 </summary>
-<div id="b6f36f3f" class="cell" data-execution_count="11">
+<div id="15f83313" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">### Defining Variables</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>Y <span class="op">=</span> df_dropna[<span class="st">'gave'</span>]</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> sm.add_constant(df_dropna[<span class="st">'treatment'</span>])</span>
@@ -801,15 +801,15 @@ Code
 </details></section>
 <section id="regression---treatment-on-charitable-donation" class="level3">
 <h3 class="anchored" data-anchor-id="regression---treatment-on-charitable-donation">Regression - Treatment on Charitable Donation</h3>
-<div id="092356b4" class="cell" data-execution_count="12">
+<div id="5fe1623b" class="cell" data-execution_count="12">
 <div class="cell-output cell-output-stdout">
 <pre><code>                          Probit Regression Results                           
 ==============================================================================
 Dep. Variable:                   gave   No. Observations:                46513
 Model:                         Probit   Df Residuals:                    46511
 Method:                           MLE   Df Model:                            1
-Date:                Sun, 14 Apr 2024   Pseudo R-squ.:                0.001300
-Time:                        13:29:37   Log-Likelihood:                -4707.8
+Date:                Sun, 28 Apr 2024   Pseudo R-squ.:                0.001300
+Time:                        14:59:14   Log-Likelihood:                -4707.8
 converged:                       True   LL-Null:                       -4713.9
 Covariance Type:            nonrobust   LLR p-value:                 0.0004642
 ==============================================================================
@@ -821,8 +821,8 @@ treatment      0.1004      0.029      3.466      0.001       0.044       0.157
 </div>
 </div>
 </section>
-<section id="section-3" class="level3">
-<h3 class="anchored" data-anchor-id="section-3"></h3>
+<section id="section-4" class="level3">
+<h3 class="anchored" data-anchor-id="section-4"></h3>
 <p>My treatment coefficient of .1004 is statistically significant at the 95% confidence level. This is consistent with the results in Table 3 column 1 of the paper, which shows that the treatment coefficient is statistically significant at the 99% confidence level.</p>
 </section>
 <section id="t-test-results---11-match-and-21-match" class="level3">
@@ -833,7 +833,7 @@ treatment      0.1004      0.029      3.466      0.001       0.044       0.157
 <summary>
 Code
 </summary>
-<div id="372d1e6c" class="cell" data-execution_count="13">
+<div id="2f5a8b34" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> ttest_ind</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># donations for 1:1 match and 2:1 match</span></span>
@@ -844,9 +844,9 @@ Code
 <span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>t_stat, p_value <span class="op">=</span> ttest_ind(donations_ratio1, donations_ratio2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </details></section>
-<section id="section-4" class="level3">
-<h3 class="anchored" data-anchor-id="section-4"></h3>
-<div id="35fc6247" class="cell" data-execution_count="14">
+<section id="section-5" class="level3">
+<h3 class="anchored" data-anchor-id="section-5"></h3>
+<div id="f59e3638" class="cell" data-execution_count="14">
 <div class="cell-output cell-output-stdout">
 <pre><code>T-stat: -1.0695278671529307
 P-value: 0.2848443758731765</code></pre>
@@ -860,7 +860,7 @@ P-value: 0.2848443758731765</code></pre>
 <summary>
 Code
 </summary>
-<div id="80a55814" class="cell" data-execution_count="15">
+<div id="135ae5c5" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a new variable for the ratio</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>df_dropna[<span class="st">'ratio1'</span>] <span class="op">=</span> (df_dropna[<span class="st">'ratio'</span>] <span class="op">==</span> <span class="dv">1</span>).astype(<span class="bu">int</span>)</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -874,7 +874,7 @@ Code
 <span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>ratio_model <span class="op">=</span> sm.OLS(Y,X).fit()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/var/folders/n1/t0q_fh6x5ng4n3nhdjhlmbgw0000gp/T/ipykernel_34667/1727008199.py:2: SettingWithCopyWarning: 
+<pre><code>/var/folders/n1/t0q_fh6x5ng4n3nhdjhlmbgw0000gp/T/ipykernel_84449/1727008199.py:2: SettingWithCopyWarning: 
 A value is trying to be set on a copy of a slice from a DataFrame.
 Try using .loc[row_indexer,col_indexer] = value instead
 
@@ -883,17 +883,17 @@ See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stab
 </div>
 </div>
 </details></section>
-<section id="section-5" class="level3">
-<h3 class="anchored" data-anchor-id="section-5"></h3>
-<div id="d67626ea" class="cell" data-execution_count="16">
+<section id="section-6" class="level3">
+<h3 class="anchored" data-anchor-id="section-6"></h3>
+<div id="35abf485" class="cell" data-execution_count="16">
 <div class="cell-output cell-output-stdout">
 <pre><code>                            OLS Regression Results                            
 ==============================================================================
 Dep. Variable:                   gave   R-squared:                       0.000
 Model:                            OLS   Adj. R-squared:                  0.000
 Method:                 Least Squares   F-statistic:                     4.671
-Date:                Sun, 14 Apr 2024   Prob (F-statistic):            0.00289
-Time:                        13:29:37   Log-Likelihood:                 24505.
+Date:                Sun, 28 Apr 2024   Prob (F-statistic):            0.00289
+Time:                        14:59:14   Log-Likelihood:                 24505.
 No. Observations:               46513   AIC:                        -4.900e+04
 Df Residuals:                   46509   BIC:                        -4.897e+04
 Df Model:                           3                                         
@@ -917,15 +917,15 @@ Notes:
 </div>
 </div>
 </section>
-<section id="section-6" class="level3">
-<h3 class="anchored" data-anchor-id="section-6"></h3>
+<section id="section-7" class="level3">
+<h3 class="anchored" data-anchor-id="section-7"></h3>
 <p>The P value for the three ratios are all less than .05, suggesting that the 2:1 and 3:1 match ratios lead to a statistically significant increase in the likelihood that someone donates compared to the 1:1 match ratio. This is consistent with the results in Table 3 column 2 of the paper, which shows that the 2:1 and 3:1 match ratios lead to a statistically significant increase in the likelihood that someone donates compared to the 1:1 match ratio.</p>
 <p><em>todo: Calculate the response rate difference between the 1:1 and 2:1 match ratios and the 2:1 and 3:1 ratios. Do this directly from the data, and do it by computing the differences in the fitted coefficients of the previous regression. what do you conclude regarding the effectiveness of different sizes of matched donations?</em></p>
 <details>
 <summary>
 Code
 </summary>
-<div id="d0c36cc7" class="cell" data-execution_count="17">
+<div id="069497b9" class="cell" data-execution_count="17">
 <div class="cell-output cell-output-stdout">
 <pre><code>Response Rate Difference between 1:1 and 2:1 Match Ratios: -0.0021795099373574135
 Response Rate Difference between 2:1 and 3:1 Match Ratios: -0.000533513218346264
@@ -936,7 +936,7 @@ Coefficient Difference between 2:1 and 3:1 Match Ratios: -0.0005335132183442049<
 </details></section>
 <section id="response-rate-and-coefficient-difference-between-ratios" class="level3">
 <h3 class="anchored" data-anchor-id="response-rate-and-coefficient-difference-between-ratios">Response Rate and Coefficient Difference between Ratios</h3>
-<div id="68ef76ec" class="cell" data-execution_count="18">
+<div id="bed4042a" class="cell" data-execution_count="18">
 <div class="cell-output cell-output-stdout">
 <pre><code>Response Rate Difference between 1:1 and 2:1 Match Ratios: -0.0021795099373574135
 Response Rate Difference between 2:1 and 3:1 Match Ratios: -0.000533513218346264
@@ -953,16 +953,16 @@ Coefficient Difference between 2:1 and 3:1 Match Ratios: -0.0005335132183442049<
 <summary>
 Code
 </summary>
-<div id="8ecbf610" class="cell" data-execution_count="19">
+<div id="ef02b726" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>donation_amount_treatment <span class="op">=</span> df_dropna[df_dropna[<span class="st">'treatment'</span>] <span class="op">==</span> <span class="dv">1</span>][<span class="st">'amount'</span>]</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>donation_amount_control <span class="op">=</span> df_dropna[df_dropna[<span class="st">'control'</span>] <span class="op">==</span> <span class="dv">1</span>][<span class="st">'amount'</span>]</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co">#T-test</span></span>
 <span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>t_stat, p_value <span class="op">=</span> ttest_ind(donation_amount_treatment, donation_amount_control)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </details></section>
-<section id="section-7" class="level3">
-<h3 class="anchored" data-anchor-id="section-7"></h3>
-<div id="83e63e34" class="cell" data-execution_count="20">
+<section id="section-8" class="level3">
+<h3 class="anchored" data-anchor-id="section-8"></h3>
+<div id="e26e2de9" class="cell" data-execution_count="20">
 <div class="cell-output cell-output-stdout">
 <pre><code>T-stat: 2.1167886253100887
 P-value: 0.03428308609067126</code></pre>
@@ -974,7 +974,7 @@ P-value: 0.03428308609067126</code></pre>
 <summary>
 Code
 </summary>
-<div id="8912f568" class="cell" data-execution_count="21">
+<div id="b23dcda0" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Filter out people who did not donate</span></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>df_donors <span class="op">=</span> df_dropna[df_dropna[<span class="st">'amount'</span>] <span class="op">&gt;</span> <span class="dv">0</span>]</span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -994,8 +994,8 @@ Code
 Dep. Variable:                 amount   R-squared:                       0.000
 Model:                            OLS   Adj. R-squared:                 -0.001
 Method:                 Least Squares   F-statistic:                    0.3300
-Date:                Sun, 14 Apr 2024   Prob (F-statistic):              0.566
-Time:                        13:29:37   Log-Likelihood:                -5002.1
+Date:                Sun, 28 Apr 2024   Prob (F-statistic):              0.566
+Time:                        14:59:14   Log-Likelihood:                -5002.1
 No. Observations:                 970   AIC:                         1.001e+04
 Df Residuals:                     968   BIC:                         1.002e+04
 Df Model:                           1                                         
@@ -1019,15 +1019,15 @@ Notes:
 </details></section>
 <section id="filtered-regression-results---treatment-on-charitable-donation-amount---conditional" class="level3">
 <h3 class="anchored" data-anchor-id="filtered-regression-results---treatment-on-charitable-donation-amount---conditional">Filtered Regression Results - Treatment on Charitable Donation Amount - Conditional</h3>
-<div id="9db73f35" class="cell" data-execution_count="22">
+<div id="ba40553c" class="cell" data-execution_count="22">
 <div class="cell-output cell-output-stdout">
 <pre><code>                            OLS Regression Results                            
 ==============================================================================
 Dep. Variable:                 amount   R-squared:                       0.000
 Model:                            OLS   Adj. R-squared:                 -0.001
 Method:                 Least Squares   F-statistic:                    0.3300
-Date:                Sun, 14 Apr 2024   Prob (F-statistic):              0.566
-Time:                        13:29:37   Log-Likelihood:                -5002.1
+Date:                Sun, 28 Apr 2024   Prob (F-statistic):              0.566
+Time:                        14:59:14   Log-Likelihood:                -5002.1
 No. Observations:                 970   AIC:                         1.001e+04
 Df Residuals:                     968   BIC:                         1.002e+04
 Df Model:                           1                                         
@@ -1057,7 +1057,7 @@ Notes:
 <summary>
 Code
 </summary>
-<div id="84daf425" class="cell" data-execution_count="23">
+<div id="123cb4ef" class="cell" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>donation_amount_control <span class="op">=</span> df_donors[df_donors[<span class="st">'control'</span>] <span class="op">==</span> <span class="dv">1</span>][<span class="st">'amount'</span>]</span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>donation_amount_treatment <span class="op">=</span> df_donors[df_donors[<span class="st">'treatment'</span>] <span class="op">==</span> <span class="dv">1</span>][<span class="st">'amount'</span>]</span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1091,9 +1091,9 @@ Code
 </div>
 </div>
 </details></section>
-<section id="section-8" class="level3">
-<h3 class="anchored" data-anchor-id="section-8"></h3>
-<div id="1a7dc516" class="cell" data-execution_count="24">
+<section id="section-9" class="level3">
+<h3 class="anchored" data-anchor-id="section-9"></h3>
+<div id="62d50e10" class="cell" data-execution_count="24">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1116,7 +1116,7 @@ Code
 <summary>
 Code
 </summary>
-<div id="f5cd2706" class="cell" data-execution_count="25">
+<div id="3ab6787a" class="cell" data-execution_count="25">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate 10,000 draws from the control and treatment distributions</span></span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>dist_control <span class="op">=</span> np.random.normal(loc<span class="op">=</span>avg_donation_control, scale<span class="op">=</span>np.std(donation_amount_control), size<span class="op">=</span><span class="dv">10000</span>)</span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>dist_treatment <span class="op">=</span> np.random.normal(loc<span class="op">=</span>avg_donation_treatment, scale<span class="op">=</span>np.std(donation_amount_treatment), size<span class="op">=</span><span class="dv">10000</span>)</span>
@@ -1144,13 +1144,13 @@ Code
 </div>
 </div>
 </details></section>
-<section id="section-9" class="level3">
-<h3 class="anchored" data-anchor-id="section-9"></h3>
-<div id="6a01a223" class="cell" data-execution_count="26">
+<section id="section-10" class="level3">
+<h3 class="anchored" data-anchor-id="section-10"></h3>
+<div id="fc2ef305" class="cell" data-execution_count="26">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="hw1_questions_files/figure-html/cell-27-output-1.png" width="968" height="523" class="figure-img"></p>
+<p><img src="hw1_questions_files/figure-html/cell-27-output-1.png" width="976" height="523" class="figure-img"></p>
 </figure>
 </div>
 </div>
@@ -1164,7 +1164,7 @@ Code
 <summary>
 Code
 </summary>
-<div id="10896c20" class="cell" data-execution_count="27">
+<div id="1d5f3a04" class="cell" data-execution_count="27">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.ticker <span class="im">as</span> mtick</span>
@@ -1220,9 +1220,9 @@ Code
 </div>
 </div>
 </details></section>
-<section id="section-10" class="level3">
-<h3 class="anchored" data-anchor-id="section-10"></h3>
-<div id="4c160b69" class="cell" data-execution_count="28">
+<section id="section-11" class="level3">
+<h3 class="anchored" data-anchor-id="section-11"></h3>
+<div id="4a1075aa" class="cell" data-execution_count="28">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">

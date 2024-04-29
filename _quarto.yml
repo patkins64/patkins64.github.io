@@ -18,3 +18,7 @@ format:
     theme: cosmo
     css: styles.css
     toc: true
+
+execute:
+  python:
+    python-path: /opt/anaconda3/bin/python
