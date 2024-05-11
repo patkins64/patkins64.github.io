@@ -1,0 +1,818 @@
+---
+title: "Poisson Regression Examples"
+author: "Peter Atkins"
+date: today
+callout-appearance: minimal # this hides the blue "i" icon on .callout-notes
+editor_options: 
+  chunk_output_type: console
+---
+
+
+This assignment uses uses the MNL model to analyze (1) yogurt purchase data made by consumers at a retail location, and (2) conjoint data about consumer preferences for minivans.
+
+
+## 1. Estimating Yogurt Preferences
+
+### Likelihood for the Multi-nomial Logit (MNL) Model
+
+Suppose we have $i=1,\ldots,n$ consumers who each select exactly one product $j$ from a set of $J$ products. The outcome variable is the identity of the product chosen $y_i \in \{1, \ldots, J\}$ or equivalently a vector of $J-1$ zeros and $1$ one, where the $1$ indicates the selected product. For example, if the third product was chosen out of 4 products, then either $y=3$ or $y=(0,0,1,0)$ depending on how we want to represent it. Suppose also that we have a vector of data on each product $x_j$ (eg, size, price, etc.). 
+
+We model the consumer's decision as the selection of the product that provides the most utility, and we'll specify the utility function as a linear function of the product characteristics:
+
+$$ U_{ij} = x_j'\beta + \epsilon_{ij} $$
+
+where $\epsilon_{ij}$ is an i.i.d. extreme value error term. 
+
+The choice of the i.i.d. extreme value error term leads to a closed-form expression for the probability that consumer $i$ chooses product $j$:
+
+$$ \mathbb{P}_i(j) = \frac{e^{x_j'\beta}}{\sum_{k=1}^Je^{x_k'\beta}} $$
+
+For example, if there are 4 products, the probability that consumer $i$ chooses product 3 is:
+
+$$ \mathbb{P}_i(3) = \frac{e^{x_3'\beta}}{e^{x_1'\beta} + e^{x_2'\beta} + e^{x_3'\beta} + e^{x_4'\beta}} $$
+
+A clever way to write the individual likelihood function for consumer $i$ is the product of the $J$ probabilities, each raised to the power of an indicator variable ($\delta_{ij}$) that indicates the chosen product:
+
+$$ L_i(\beta) = \prod_{j=1}^J \mathbb{P}_i(j)^{\delta_{ij}} = \mathbb{P}_i(1)^{\delta_{i1}} \times \ldots \times \mathbb{P}_i(J)^{\delta_{iJ}}$$
+
+Notice that if the consumer selected product $j=3$, then $\delta_{i3}=1$ while $\delta_{i1}=\delta_{i2}=\delta_{i4}=0$ and the likelihood is:
+
+$$ L_i(\beta) = \mathbb{P}_i(1)^0 \times \mathbb{P}_i(2)^0 \times \mathbb{P}_i(3)^1 \times \mathbb{P}_i(4)^0 = \mathbb{P}_i(3) = \frac{e^{x_3'\beta}}{\sum_{k=1}^Je^{x_k'\beta}} $$
+
+The joint likelihood (across all consumers) is the product of the $n$ individual likelihoods:
+
+$$ L_n(\beta) = \prod_{i=1}^n L_i(\beta) = \prod_{i=1}^n \prod_{j=1}^J \mathbb{P}_i(j)^{\delta_{ij}} $$
+
+And the joint log-likelihood function is:
+
+$$ \ell_n(\beta) = \sum_{i=1}^n \sum_{j=1}^J \delta_{ij} \log(\mathbb{P}_i(j)) $$
+
+
+### Yogurt Dataset
+
+We will use the `yogurt_data` dataset, which provides anonymized consumer identifiers (`id`), a vector indicating the chosen product (`y1`:`y4`), a vector indicating if any products were "featured" in the store as a form of advertising (`f1`:`f4`), and the products' prices (`p1`:`p4`). For example, consumer 1 purchased yogurt 4 at a price of 0.079/oz and none of the yogurts were featured/advertised at the time of consumer 1's purchase.  Consumers 2 through 7 each bought yogurt 2, etc.
+
+_todo: import the data, show the first few rows, and describe the data a bit._
+
+
+<details>
+<summary>Code</summary>
+
+```{python}
+import pandas as pd
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.ticker as mtick
+import statsmodels.formula.api as smf
+import scipy.stats as stats
+import statsmodels.api as sm
+from scipy.stats import ttest_ind
+import numpy as np
+from scipy.stats import norm
+
+file_path = "/Users/peteratkins/Desktop/yogurt_data.csv"
+
+df = pd.read_csv(file_path)
+
+df[['y1', 'y2', 'y3', 'f1', 'f2', 'f3', 'f4']] = df[['y1', 'y2', 'y3', 'f1', 'f2', 'f3', 'f4']].astype(int)
+df[['p1', 'p2', 'p3', 'p4']] = df[['p1', 'p2', 'p3', 'p4']].astype(float)
+
+print(df.head())
+
+```
+
+
+###
+
+```{python}
+#| echo: False
+import pandas as pd
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.ticker as mtick
+import statsmodels.formula.api as smf
+import scipy.stats as stats
+import statsmodels.api as sm
+from scipy.stats import ttest_ind
+import numpy as np
+from scipy.stats import norm
+
+file_path = "/Users/peteratkins/Desktop/yogurt_data.csv"
+
+df = pd.read_csv(file_path)
+
+df[['y1', 'y2', 'y3', 'f1', 'f2', 'f3', 'f4']] = df[['y1', 'y2', 'y3', 'f1', 'f2', 'f3', 'f4']].astype(int)
+df[['p1', 'p2', 'p3', 'p4']] = df[['p1', 'p2', 'p3', 'p4']].astype(float)
+
+print(df.head())
+
+```
+
+
+The vector of product features includes brand dummy variables for yogurts 1-3 with product product 4 omitted to avoid multi-collinearity. The 'f' dummy variable to indicates if a yogurt was featured, and the continuous variable 'p' indicates  the yogurts' prices per oz.   
+
+
+
+$$ x_j' = [\mathbbm{1}(\text{Yogurt 1}), \mathbbm{1}(\text{Yogurt 2}), \mathbbm{1}(\text{Yogurt 3}), X_f, X_p] $$
+
+The "hard part" of the MNL likelihood function is organizing the data, as we need to keep track of 3 dimensions (consumer $i$, covariate $k$, and product $j$) instead of the typical 2 dimensions for cross-sectional regression models (consumer $i$ and covariate $k$). 
+
+What we would like to do is reorganize the data from a "wide" shape with $n$ rows and multiple columns for each covariate, to a "long" shape with $n \times J$ rows and a single column for each covariate.  As part of this re-organization, we'll add binary variables to indicate the first 3 products; the variables for featured and price are included in the dataset and simply need to be "pivoted" or "melted" from wide to long.  
+
+
+###
+<details>
+<summary>Code</summary>
+
+```{python}
+import pandas as pd
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.ticker as mtick
+import statsmodels.formula.api as smf
+import scipy.stats as stats
+import statsmodels.api as sm
+from scipy.stats import ttest_ind
+import numpy as np
+from scipy.stats import norm
+
+file_path = "/Users/peteratkins/Desktop/yogurt_data.csv"
+
+df = pd.read_csv(file_path)
+
+df[['y1', 'y2', 'y3', 'y4', 'f1', 'f2', 'f3', 'f4']] = df[['y1', 'y2', 'y3', 'y4', 'f1', 'f2', 'f3', 'f4']].astype(int)
+df[['p1', 'p2', 'p3', 'p4']] = df[['p1', 'p2', 'p3', 'p4']].astype(float)
+
+
+df_long_y = pd.melt(df, id_vars=['id'], value_vars=['y1', 'y2', 'y3', 'y4'], var_name='yogurt', value_name='selected')
+df_long_f = pd.melt(df, id_vars=['id'], value_vars=['f1', 'f2', 'f3', 'f4'], var_name='yogurt', value_name='Featured?')
+df_long_p = pd.melt(df, id_vars=['id'], value_vars=['p1', 'p2', 'p3', 'p4'], var_name='yogurt', value_name='Price per Oz')
+
+
+df_long_y['yogurt'] = df_long_y['yogurt'].str[1:]
+df_long_f['yogurt'] = df_long_f['yogurt'].str[1:]
+df_long_p['yogurt'] = df_long_p['yogurt'].str[1:]
+
+
+df_long = pd.merge(df_long_y, df_long_f, on=['id', 'yogurt'])
+df_long = pd.merge(df_long, df_long_p, on=['id', 'yogurt'])
+
+
+df_long = df_long[df_long['selected'] == 1].drop(columns='selected')
+
+
+df_long['yogurt'] = 'yogurt ' + df_long['yogurt']
+
+df_long = df_long.sort_values(by='id')
+
+print(df_long.head().to_string(index=False))
+
+```
+
+
+
+###
+
+```{python}
+#| echo: False
+import pandas as pd
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.ticker as mtick
+import statsmodels.formula.api as smf
+import scipy.stats as stats
+import statsmodels.api as sm
+from scipy.stats import ttest_ind
+import numpy as np
+from scipy.stats import norm
+
+file_path = "/Users/peteratkins/Desktop/yogurt_data.csv"
+
+df = pd.read_csv(file_path)
+
+df[['y1', 'y2', 'y3', 'y4', 'f1', 'f2', 'f3', 'f4']] = df[['y1', 'y2', 'y3', 'y4', 'f1', 'f2', 'f3', 'f4']].astype(int)
+df[['p1', 'p2', 'p3', 'p4']] = df[['p1', 'p2', 'p3', 'p4']].astype(float)
+
+
+df_long_y = pd.melt(df, id_vars=['id'], value_vars=['y1', 'y2', 'y3', 'y4'], var_name='yogurt', value_name='selected')
+df_long_f = pd.melt(df, id_vars=['id'], value_vars=['f1', 'f2', 'f3', 'f4'], var_name='yogurt', value_name='Featured?')
+df_long_p = pd.melt(df, id_vars=['id'], value_vars=['p1', 'p2', 'p3', 'p4'], var_name='yogurt', value_name='Price per Oz')
+
+
+df_long_y['yogurt'] = df_long_y['yogurt'].str[1:]
+df_long_f['yogurt'] = df_long_f['yogurt'].str[1:]
+df_long_p['yogurt'] = df_long_p['yogurt'].str[1:]
+
+
+df_long = pd.merge(df_long_y, df_long_f, on=['id', 'yogurt'])
+df_long = pd.merge(df_long, df_long_p, on=['id', 'yogurt'])
+
+
+df_long = df_long[df_long['selected'] == 1].drop(columns='selected')
+
+
+df_long['yogurt'] = 'yogurt ' + df_long['yogurt']
+
+df_long = df_long.sort_values(by='id')
+
+print(df_long.head().to_string(index=False))
+```
+
+
+
+
+
+
+### Estimation
+
+
+###
+<details>
+<summary>Code</summary>
+
+
+```{python}
+import pandas as pd
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.ticker as mtick
+import statsmodels.formula.api as smf
+import scipy.stats as stats
+import statsmodels.api as sm
+from scipy.stats import ttest_ind
+import numpy as np
+from scipy.stats import norm
+from scipy.optimize import minimize
+from scipy.special import expit
+
+
+df_long['yogurt1'] = (df_long['yogurt'] == 'yogurt 1').astype(int)
+df_long['yogurt2'] = (df_long['yogurt'] == 'yogurt 2').astype(int)
+df_long['yogurt3'] = (df_long['yogurt'] == 'yogurt 3').astype(int)
+
+X = df_long[['yogurt1', 'yogurt2', 'yogurt3', 'Featured?', 'Price per Oz']].values
+y = (df_long['yogurt'] == 'yogurt 1').values
+
+
+def log_likelihood(beta, X, y):
+    logit = expit(X @ beta)
+    return np.sum(y * np.log(logit + 1e-10) + (1 - y) * np.log(1 - logit + 1e-10))
+
+
+beta_init = np.ones(X.shape[1]) * .1
+
+
+neg_log_likelihood = lambda beta: -log_likelihood(beta, X, y)
+
+
+res = minimize(neg_log_likelihood, beta_init, method='BFGS')
+
+beta_hat = res.x
+
+titles = ['beta_hat1 (yogurt1)', 'beta_hat2 (yogurt2)', 'beta_hat3 (yogurt3)', 'beta_hat_f (Featured?)', 'beta_hat_p (Price per Oz)']
+
+for title, value in zip(titles, beta_hat):
+    print(f'{title} = {value}')
+```
+
+
+
+###
+
+```{python}
+#| echo: False
+import pandas as pd
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.ticker as mtick
+import statsmodels.formula.api as smf
+import scipy.stats as stats
+import statsmodels.api as sm
+from scipy.stats import ttest_ind
+import numpy as np
+from scipy.stats import norm
+
+df_long['yogurt1'] = (df_long['yogurt'] == 'yogurt 1').astype(int)
+df_long['yogurt2'] = (df_long['yogurt'] == 'yogurt 2').astype(int)
+df_long['yogurt3'] = (df_long['yogurt'] == 'yogurt 3').astype(int)
+
+X = df_long[['yogurt1', 'yogurt2', 'yogurt3', 'Featured?', 'Price per Oz']].values
+y = (df_long['yogurt'] == 'yogurt 1').values
+
+
+def log_likelihood(beta, X, y):
+    logit = expit(X @ beta)
+    return np.sum(y * np.log(logit + 1e-10) + (1 - y) * np.log(1 - logit + 1e-10))
+
+
+beta_init = np.ones(X.shape[1])
+
+neg_log_likelihood = lambda beta: -log_likelihood(beta, X, y)
+
+res = minimize(neg_log_likelihood, beta_init, method='BFGS')
+
+beta_hat = res.x
+
+titles = ['beta_hat1 (yogurt1)', 'beta_hat2 (yogurt2)', 'beta_hat3 (yogurt3)', 'beta_hat_f (Featured?)', 'beta_hat_p (Price per Oz)']
+
+for title, value in zip(titles, beta_hat):
+    print(f'{title} = {value}')
+
+
+```
+
+
+### Discussion
+The yogurt with the highest likelihood of being selected is yogurt 1, as it has the largest coefficient. 
+
+
+### Per-unit monetary measure of brand value
+
+###
+<details>
+<summary>Code</summary>
+
+```{python}
+
+import pandas as pd
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.ticker as mtick
+import statsmodels.formula.api as smf
+import scipy.stats as stats
+import statsmodels.api as sm
+from scipy.stats import ttest_ind
+import numpy as np
+from scipy.stats import norm
+
+beta_hat_p = beta_hat[titles.index('beta_hat_p (Price per Oz)')]
+
+beta_hat1 = beta_hat[titles.index('beta_hat1 (yogurt1)')]
+beta_hat2 = beta_hat[titles.index('beta_hat2 (yogurt2)')]
+beta_hat3 = beta_hat[titles.index('beta_hat3 (yogurt3)')]
+
+dollar_per_utiity = 1 / beta_hat_p
+
+utility_difference = beta_hat1 - min(beta_hat1, beta_hat2, beta_hat3)
+
+dollar_benegit = utility_difference * dollar_per_utiity
+
+print(f'The dollar benefit between the most-preferred yogurt and the least preferred yogurt is ${dollar_benegit:.2f}')
+
+
+
+```
+
+
+
+###
+
+```{python}
+#| echo: False
+import pandas as pd
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.ticker as mtick
+import statsmodels.formula.api as smf
+import scipy.stats as stats
+import statsmodels.api as sm
+from scipy.stats import ttest_ind
+import numpy as np
+from scipy.stats import norm
+
+
+beta_hat_p = beta_hat[titles.index('beta_hat_p (Price per Oz)')]
+
+beta_hat1 = beta_hat[titles.index('beta_hat1 (yogurt1)')]
+beta_hat2 = beta_hat[titles.index('beta_hat2 (yogurt2)')]
+beta_hat3 = beta_hat[titles.index('beta_hat3 (yogurt3)')]
+
+dollar_per_utiity = 1 / beta_hat_p
+
+utility_difference = beta_hat1 - min(beta_hat1, beta_hat2, beta_hat3)
+
+dollar_benegit = utility_difference * dollar_per_utiity
+
+print(f'The dollar benefit between the most-preferred yogurt and the least preferred yogurt is ${dollar_benegit:.2f}')
+
+```
+
+
+###
+<details>
+<summary>Code</summary>
+
+
+```{python}
+
+import pandas as pd
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.ticker as mtick
+import statsmodels.formula.api as smf
+import scipy.stats as stats
+import statsmodels.api as sm
+from scipy.stats import ttest_ind
+import numpy as np
+from scipy.stats import norm
+from scipy.special import softmax
+from sklearn.preprocessing import LabelEncoder
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+
+
+market_shares_current = df_long['yogurt'].value_counts(normalize=True)
+
+average_price = df_long.groupby('yogurt')['Price per Oz'].mean()
+
+df_summary = pd.DataFrame({
+    'Market Share': market_shares_current,
+    'Price': average_price})
+
+df_summary['Market Share'] = df_summary['Market Share'].apply(lambda x: f'{x*100:.2f}%')
+
+df_summary['Price'] = df_summary['Price'].apply(lambda x: f'${x:.2f}')
+
+print("Existing Price and Market Share")
+print(df_summary)
+
+from sklearn.linear_model import LogisticRegression
+
+df_long['yogurt_num'] = df_long['yogurt'].map({'yogurt 1': 0, 'yogurt 2': 1, 'yogurt 3': 2, 'yogurt 4': 3})
+
+X = df_long[['Featured?', 'Price per Oz']].values
+y = df_long['yogurt_num'].values
+
+model = LogisticRegression(multi_class='multinomial', solver='lbfgs')
+model.fit(X, y)
+
+df_long_new = df_long.copy()
+df_long_new.loc[df_long_new['yogurt'] == 'yogurt 1', 'Price per Oz'] += 0.10
+
+X_new = df_long_new[['Featured?', 'Price per Oz']].values
+probabilities_new = model.predict_proba(X_new)
+
+market_shares_new = probabilities_new.mean(axis=0)
+
+average_price_new = df_long_new.groupby('yogurt')['Price per Oz'].mean()
+
+df_summary_new = pd.DataFrame({
+    'Market Share': market_shares_new,
+    'Price': average_price_new
+}, index=['yogurt 1', 'yogurt 2', 'yogurt 3', 'yogurt 4'])
+
+df_summary_new['Market Share'] = df_summary_new['Market Share'].apply(lambda x: f'{x*100:.2f}%')
+
+df_summary_new['Price'] = df_summary_new['Price'].apply(lambda x: f'${x:.2f}')
+
+print(" ")
+print("New Price and Market Share")
+print(df_summary_new)
+
+
+```
+
+
+
+###
+
+```{python}
+#| echo: False
+import pandas as pd
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.ticker as mtick
+import statsmodels.formula.api as smf
+import scipy.stats as stats
+import statsmodels.api as sm
+from scipy.stats import ttest_ind
+import numpy as np
+from scipy.stats import norm
+from scipy.special import softmax
+from sklearn.preprocessing import LabelEncoder
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+
+
+market_shares_current = df_long['yogurt'].value_counts(normalize=True)
+
+average_price = df_long.groupby('yogurt')['Price per Oz'].mean()
+
+df_summary = pd.DataFrame({
+    'Market Share': market_shares_current,
+    'Price': average_price})
+
+df_summary['Market Share'] = df_summary['Market Share'].apply(lambda x: f'{x*100:.2f}%')
+
+df_summary['Price'] = df_summary['Price'].apply(lambda x: f'${x:.2f}')
+
+print("Existing Price and Market Share")
+print(df_summary)
+
+from sklearn.linear_model import LogisticRegression
+
+df_long['yogurt_num'] = df_long['yogurt'].map({'yogurt 1': 0, 'yogurt 2': 1, 'yogurt 3': 2, 'yogurt 4': 3})
+
+X = df_long[['Featured?', 'Price per Oz']].values
+y = df_long['yogurt_num'].values
+
+model = LogisticRegression(multi_class='multinomial', solver='lbfgs')
+model.fit(X, y)
+
+df_long_new = df_long.copy()
+df_long_new.loc[df_long_new['yogurt'] == 'yogurt 1', 'Price per Oz'] += 0.10
+
+X_new = df_long_new[['Featured?', 'Price per Oz']].values
+probabilities_new = model.predict_proba(X_new)
+
+market_shares_new = probabilities_new.mean(axis=0)
+
+average_price_new = df_long_new.groupby('yogurt')['Price per Oz'].mean()
+
+df_summary_new = pd.DataFrame({
+    'Market Share': market_shares_new,
+    'Price': average_price_new
+}, index=['yogurt 1', 'yogurt 2', 'yogurt 3', 'yogurt 4'])
+
+df_summary_new['Market Share'] = df_summary_new['Market Share'].apply(lambda x: f'{x*100:.2f}%')
+
+df_summary_new['Price'] = df_summary_new['Price'].apply(lambda x: f'${x:.2f}')
+
+print(" ")
+print("New Price and Market Share")
+print(df_summary_new)
+print(" ")
+print("The Market Share of Yogurt 1 has increased despite the price increase")
+
+```
+
+## 2. Estimating Minivan Preferences
+
+###
+<details>
+<summary>Code</summary>
+
+```{python}
+### _todo: download the dataset from here:_ http://goo.gl/5xQObB 
+
+import pandas as pd
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.ticker as mtick
+import statsmodels.formula.api as smf
+import scipy.stats as stats
+import statsmodels.api as sm
+from scipy.stats import ttest_ind
+import numpy as np
+from scipy.stats import norm
+
+conjoint_data = "/Users/peteratkins/Desktop/chapter13conjoint.csv"
+
+df_conjoint = pd.read_csv(conjoint_data)
+
+print(df_conjoint.head())
+
+num_respondents = df_conjoint['resp.id'].nunique()
+num_tasks = df_conjoint['ques'].nunique()
+alternatives_per_task = df_conjoint.groupby(['resp.id', 'ques'])['alt'].nunique().reset_index()
+alternatives_per_task.columns = ['Respondent ID', 'Question', 'Number of Alternatives']
+
+print("")
+print(f"Number of Respondents: {num_respondents}")
+print(f"Number of Tasks per Respondent: {num_tasks}")
+print(f"Number of Alternatives per Task: {alternatives_per_task['Number of Alternatives'].unique()}")
+
+```
+
+
+
+###
+
+```{python}
+#| echo: False
+import pandas as pd
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.ticker as mtick
+import statsmodels.formula.api as smf
+import scipy.stats as stats
+import statsmodels.api as sm
+from scipy.stats import ttest_ind
+import numpy as np
+from scipy.stats import norm
+
+print(df_conjoint.head())
+
+num_respondents = df_conjoint['resp.id'].nunique()
+num_tasks = df_conjoint['ques'].nunique()
+alternatives_per_task = df_conjoint.groupby(['resp.id', 'ques'])['alt'].nunique().reset_index()
+alternatives_per_task.columns = ['Respondent ID', 'Question', 'Number of Alternatives']
+
+print("")
+print(f"Number of Respondents: {num_respondents}")
+print(f"Number of Tasks per Respondent: {num_tasks}")
+print(f"Number of Alternatives per Task: {alternatives_per_task['Number of Alternatives'].unique()}")
+print(" The attributes (levels) were number of seats (6,7,8), cargo space (2ft, 3ft), engine type (gas, hybrid, electric), and price (in thousands of dollars).")
+
+```
+
+
+
+### Model
+
+###
+<details>
+<summary>Code</summary>
+
+```{python}
+import pandas as pd
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.ticker as mtick
+import statsmodels.formula.api as smf
+import scipy.stats as stats
+import statsmodels.api as sm
+from scipy.stats import ttest_ind
+import numpy as np
+from scipy.stats import norm
+from statsmodels.discrete.discrete_model import Logit
+import statsmodels.api as sm
+from sklearn.preprocessing import LabelEncoder
+
+labelencoder = LabelEncoder()
+for col in df_conjoint.columns:
+    if df_conjoint[col].dtype == object:
+        df_conjoint[col] = labelencoder.fit_transform(df_conjoint[col])
+
+X = df_conjoint.drop('choice', axis=1)
+y = df_conjoint['choice']
+
+model = Logit(y, X)
+result = model.fit()
+
+print(result.summary())
+
+```
+
+
+
+###
+
+```{python}
+#| echo: False
+import pandas as pd
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.ticker as mtick
+import statsmodels.formula.api as smf
+import scipy.stats as stats
+import statsmodels.api as sm
+from scipy.stats import ttest_ind
+import numpy as np
+from scipy.stats import norm
+
+X = df_conjoint.drop('choice', axis=1)
+y = df_conjoint['choice']
+
+X = X.astype(int)
+
+
+model = Logit(y, X)
+result = model.fit()
+
+coef_cargo_3ft = result.params['cargo']
+coef_price = result.params['price']
+
+
+print(result.summary())
+print("")
+
+print("The results show that the number of seats, cargo space, and engine type are all significant predictors of the minivan choice. The price coefficient is negative, indicating that higher prices reduce the probability of choosing a minivan. Ability to carry 3ft of cargo space is the most preferred feature, followed by a hybrid engine, and 7 seats.")
+
+```
+
+
+
+
+### Dollar Value of 3ft Cargo Space
+
+### 
+<details>
+<summary>Code</summary>
+
+```{python}
+import pandas as pd
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.ticker as mtick
+import statsmodels.formula.api as smf
+import scipy.stats as stats
+import statsmodels.api as sm
+from scipy.stats import ttest_ind
+import numpy as np
+from scipy.stats import norm
+
+dollar_value = (coef_cargo_3ft / -coef_price) *(3-2)
+print(f"The dollar value of 3ft of cargo space as compared to 2ft of cargo space is ${dollar_value:.2f}")
+
+```
+
+
+
+###
+
+```{python}
+#| echo: False
+import pandas as pd
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.ticker as mtick
+import statsmodels.formula.api as smf
+import scipy.stats as stats
+import statsmodels.api as sm
+from scipy.stats import ttest_ind
+import numpy as np
+from scipy.stats import norm
+
+dollar_value = (coef_cargo_3ft / -coef_price) *(3-2)
+print(f"The dollar value of 3ft of cargo space as compared to 2ft of cargo space is ${dollar_value:.2f}")
+
+```
+
+### Market Shares
+
+
+###
+<details>
+<summary>Code</summary>
+
+```{python}
+
+import pandas as pd
+import numpy as np
+from statsmodels.api import Logit
+
+market = pd.DataFrame({
+    'Minivan': ['A', 'B', 'C', 'D', 'E', 'F'],
+    'seat_7': [1, 0, 0, 1, 0, 1],
+    'seat_8': [0, 0, 1, 0, 0, 0],
+    'cargo_3ft': [0, 0, 0, 1, 0, 0],
+    'eng_gas': [0, 1, 1, 1, 0, 0],
+    'eng_hyb': [1, 0, 0, 0, 0, 1],
+    'eng_elec': [0, 0, 0, 0, 1, 0],
+    'price': [30, 30, 30, 40, 40, 35]
+})
+
+coefficients = pd.Series([0.1805, 0.1805, 0.4571, 0.3216, 0.3216, 0.3216, -0.0864], index=['seat_7', 'seat_8', 'cargo_3ft', 'eng_gas', 'eng_hyb', 'eng_elec', 'price'])
+
+market['Utility'] = np.dot(market[['seat_7', 'seat_8', 'cargo_3ft', 'eng_gas', 'eng_hyb', 'eng_elec', 'price']], coefficients)
+
+market['Probability'] = np.exp(market['Utility']) / np.sum(np.exp(market['Utility']))
+
+market['Market Share'] = market['Probability']
+
+print(market.assign(Market_Share_Percent = [f'{x * 100:.2f}%' for x in market['Market Share']])[['Minivan', 'Market_Share_Percent']].to_string(index=False))
+
+
+```
+
+
+
+###
+
+```{python}
+#| echo: False
+import pandas as pd
+import numpy as np
+from statsmodels.api import Logit
+
+market = pd.DataFrame({
+    'Minivan': ['A', 'B', 'C', 'D', 'E', 'F'],
+    'seat_7': [1, 0, 0, 1, 0, 1],
+    'seat_8': [0, 0, 1, 0, 0, 0],
+    'cargo_3ft': [0, 0, 0, 1, 0, 0],
+    'eng_gas': [0, 1, 1, 1, 0, 0],
+    'eng_hyb': [1, 0, 0, 0, 0, 1],
+    'eng_elec': [0, 0, 0, 0, 1, 0],
+    'price': [30, 30, 30, 40, 40, 35]
+})
+
+coefficients = pd.Series([0.1805, 0.1805, 0.4571, 0.3216, 0.3216, 0.3216, -0.0864], index=['seat_7', 'seat_8', 'cargo_3ft', 'eng_gas', 'eng_hyb', 'eng_elec', 'price'])
+
+market['Utility'] = np.dot(market[['seat_7', 'seat_8', 'cargo_3ft', 'eng_gas', 'eng_hyb', 'eng_elec', 'price']], coefficients)
+
+market['Probability'] = np.exp(market['Utility']) / np.sum(np.exp(market['Utility']))
+
+market['Market Share'] = market['Probability']
+
+print(market.assign(Market_Share_Percent = [f'{x * 100:.2f}%' for x in market['Market Share']])[['Minivan', 'Market_Share_Percent']].to_string(index=False))
+
+
+```
+
+
+
+
+

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Peter Atkins">
-<meta name="dcterms.date" content="2024-04-28">
+<meta name="dcterms.date" content="2024-05-11">
 
 <title>Peter Atkins - A Replication of Karlan and List (2007)</title>
 <style>
@@ -213,7 +213,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">April 28, 2024</p>
+      <p class="date">May 11, 2024</p>
     </div>
   </div>
   
@@ -228,7 +228,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
 <p>Dean Karlan at Yale and John List at the University of Chicago conducted a field experiment to test the effectiveness of different fundraising letters. They sent out 50,000 fundraising letters to potential donors, randomly assigning each letter to one of three treatments: a standard letter, a matching grant letter, or a challenge grant letter. They published the results of this experiment in the <em>American Economic Review</em> in 2007. The article and supporting data are available from the <a href="https://www.aeaweb.org/articles?id=10.1257/aer.97.5.1774">AEA website</a> and from Innovations for Poverty Action as part of <a href="https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/27853&amp;version=4.2">Harvard’s Dataverse</a>.</p>
-<p><em>to do: expand on the description of the experiment.</em></p>
 <p>This project seeks to replicate their results.</p>
 </section>
 <section id="data" class="level2">
@@ -238,7 +237,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <summary>
 Code
 </summary>
-<div id="4768f27e" class="cell" data-execution_count="1">
+<div id="201a800d" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.ticker <span class="im">as</span> mtick</span>
@@ -267,7 +266,7 @@ Code
 <summary>
 Data
 </summary>
-<div id="90d887bf" class="cell" data-execution_count="2">
+<div id="a144ed00" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Print all rows</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df_dropna)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -553,7 +552,6 @@ Variable Definitions
 <section id="balance-test" class="level3">
 <h3 class="anchored" data-anchor-id="balance-test">Balance Test</h3>
 <p>As an ad hoc test of the randomization mechanism, I provide a series of tests that compare aspects of the treatment and control groups to assess whether they are statistically significantly different from one another.</p>
-<p><em>todo: test a few variables other than the key outcome variables (for example, test months since last donation) to see if the treatment and control groups are statistically significantly different at the 95% confidence level. Do each as a t-test and separately as a linear regression, and confirm you get the exact same results from both methods. When doing a t-test, use the formula in the class slides. When doing the linear regression, regress for example mrm2 on treatment and look at the estimated coefficient on the treatment variable. It might be helpful to compare parts of your analysis to Table 1 in the paper. Be sure to comment on your results (hint: why is Table 1 included in the paper).</em></p>
 </section>
 <section id="t-test-and-linear-regression" class="level3">
 <h3 class="anchored" data-anchor-id="t-test-and-linear-regression">T-Test and Linear Regression</h3>
@@ -561,7 +559,7 @@ Variable Definitions
 <summary>
 Code
 </summary>
-<div id="642ebdcb" class="cell" data-execution_count="3">
+<div id="ebc4ffa1" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Separate the data into treatment and control groups</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>treatment_group <span class="op">=</span> df_dropna[df_dropna[<span class="st">'treatment'</span>] <span class="op">==</span> <span class="dv">1</span>][<span class="st">'mrm2'</span>]</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>control_group <span class="op">=</span> df_dropna[df_dropna[<span class="st">'treatment'</span>] <span class="op">==</span> <span class="dv">0</span>][<span class="st">'mrm2'</span>]</span>
@@ -584,8 +582,8 @@ Linear regression results:
 Dep. Variable:                   mrm2   R-squared:                       0.000
 Model:                            OLS   Adj. R-squared:                 -0.000
 Method:                 Least Squares   F-statistic:                  0.003865
-Date:                Sun, 28 Apr 2024   Prob (F-statistic):              0.950
-Time:                        14:59:13   Log-Likelihood:            -1.8175e+05
+Date:                Sat, 11 May 2024   Prob (F-statistic):              0.950
+Time:                        10:39:07   Log-Likelihood:            -1.8175e+05
 No. Observations:               46513   AIC:                         3.635e+05
 Df Residuals:                   46511   BIC:                         3.635e+05
 Df Model:                           1                                         
@@ -614,15 +612,15 @@ Notes:
 </section>
 <section id="linear-regression-results" class="level3">
 <h3 class="anchored" data-anchor-id="linear-regression-results">Linear regression results:</h3>
-<div id="f2179fe6" class="cell" data-execution_count="4">
+<div id="2f069467" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-stdout">
 <pre><code>                            OLS Regression Results                            
 ==============================================================================
 Dep. Variable:                   mrm2   R-squared:                       0.000
 Model:                            OLS   Adj. R-squared:                 -0.000
 Method:                 Least Squares   F-statistic:                  0.003865
-Date:                Sun, 28 Apr 2024   Prob (F-statistic):              0.950
-Time:                        14:59:13   Log-Likelihood:            -1.8175e+05
+Date:                Sat, 11 May 2024   Prob (F-statistic):              0.950
+Time:                        10:39:07   Log-Likelihood:            -1.8175e+05
 No. Observations:               46513   AIC:                         3.635e+05
 Df Residuals:                   46511   BIC:                         3.635e+05
 Df Model:                           1                                         
@@ -647,12 +645,11 @@ Notes:
 <section id="charitable-contribution-made" class="level3">
 <h3 class="anchored" data-anchor-id="charitable-contribution-made">Charitable Contribution Made</h3>
 <p>First, I analyze whether matched donations lead to an increased response rate of making a donation.</p>
-<p><em>todo: make a barplot with two bars. Each bar is the proportion of people who donated. One bar for treatment and one bar for control.</em></p>
 <details>
 <summary>
 Code
 </summary>
-<div id="20b1d280" class="cell" data-execution_count="5">
+<div id="46d76358" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>treatment_donated <span class="op">=</span> df_dropna[(df_dropna[<span class="st">'treatment'</span>] <span class="op">==</span> <span class="dv">1</span>) <span class="op">&amp;</span> (df_dropna[<span class="st">'gave'</span>] <span class="op">==</span> <span class="dv">1</span>)].shape[<span class="dv">0</span>]</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(treatment_donated)</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -698,7 +695,7 @@ Control Donation Rate: 0.88%</code></pre>
 </details></section>
 <section id="bar-plot---proportion-of-people-who-donated-by-treatment-group" class="level3">
 <h3 class="anchored" data-anchor-id="bar-plot---proportion-of-people-who-donated-by-treatment-group">Bar Plot - Proportion of People Who Donated by Treatment Group</h3>
-<div id="a5cc6f04" class="cell" data-execution_count="6">
+<div id="452a0536" class="cell" data-execution_count="6">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -707,7 +704,6 @@ Control Donation Rate: 0.88%</code></pre>
 </div>
 </div>
 </div>
-<p>_todo: run a t-test between the treatment and control groups on the binary outcome of whether any charitable donation was made.</p>
 </section>
 <section id="t-test-results---treatmentcontrol-on-charitable-donation---bianary" class="level3">
 <h3 class="anchored" data-anchor-id="t-test-results---treatmentcontrol-on-charitable-donation---bianary">T-Test Results - Treatment/Control on Charitable Donation - Bianary</h3>
@@ -715,7 +711,7 @@ Control Donation Rate: 0.88%</code></pre>
 <summary>
 Code
 </summary>
-<div id="f6e6a0fc" class="cell" data-execution_count="7">
+<div id="48a25abb" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>treatment_group2 <span class="op">=</span> df_dropna[df_dropna[<span class="st">'treatment'</span>] <span class="op">==</span> <span class="dv">1</span>][<span class="st">'gave'</span>]</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>control_group2 <span class="op">=</span> df_dropna[df_dropna[<span class="st">'treatment'</span>] <span class="op">==</span> <span class="dv">0</span>][<span class="st">'gave'</span>]</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -724,12 +720,11 @@ Code
 </details></section>
 <section id="section-1" class="level3">
 <h3 class="anchored" data-anchor-id="section-1"></h3>
-<div id="974d43a1" class="cell" data-execution_count="8">
+<div id="67f9416e" class="cell" data-execution_count="8">
 <div class="cell-output cell-output-stdout">
-<pre><code>t-test results: t-statistic = 3.4520847762481726 , p-value = 0.000556767190968193</code></pre>
+<pre><code>t-test results: t-statistic = 3.4520847762481726 , p-value = 0.0005567671909681928</code></pre>
 </div>
 </div>
-<p>Also run a bivariate linear regression that demonstrates the same finding. (It may help to confirm your calculations match Table 2a Panel A.)</p>
 </section>
 <section id="bivarariate-linear-regression---treatmentcontrol-on-charitable-donation" class="level3">
 <h3 class="anchored" data-anchor-id="bivarariate-linear-regression---treatmentcontrol-on-charitable-donation">Bivarariate linear regression - Treatment/Control on Charitable Donation</h3>
@@ -737,7 +732,7 @@ Code
 <summary>
 Code
 </summary>
-<div id="772183ae" class="cell" data-execution_count="9">
+<div id="098c192a" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform a linear regression on Treatment</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>treatmentdonation <span class="op">=</span> <span class="st">'gave ~ treatment'</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -747,15 +742,15 @@ Code
 </details></section>
 <section id="section-2" class="level3">
 <h3 class="anchored" data-anchor-id="section-2"></h3>
-<div id="f0f58683" class="cell" data-execution_count="10">
+<div id="0d8194fd" class="cell" data-execution_count="10">
 <div class="cell-output cell-output-stdout">
 <pre><code>                            OLS Regression Results                            
 ==============================================================================
 Dep. Variable:                   gave   R-squared:                       0.000
 Model:                            OLS   Adj. R-squared:                  0.000
 Method:                 Least Squares   F-statistic:                     11.92
-Date:                Sun, 28 Apr 2024   Prob (F-statistic):           0.000557
-Time:                        14:59:13   Log-Likelihood:                 24504.
+Date:                Sat, 11 May 2024   Prob (F-statistic):           0.000557
+Time:                        10:39:07   Log-Likelihood:                 24504.
 No. Observations:               46513   AIC:                        -4.900e+04
 Df Residuals:                   46511   BIC:                        -4.899e+04
 Df Model:                           1                                         
@@ -780,12 +775,11 @@ Notes:
 <section id="section-3" class="level3">
 <h3 class="anchored" data-anchor-id="section-3"></h3>
 <p>The P-Value of &lt; .05 indicates that the treatment group had a statistically significant higher rate of charitable donations than the control group. This suggests that the treatment group was more likely to donate than the control group. This is consistent with the results in Table 2a Panel A of the paper, which shows that the treatment group had a higher rate of charitable donations than the control group.</p>
-<p><em>todo: run a probit regression where the outcome variable is whether any charitable donation was made and the explanatory variable is assignment to treatment or control. Confirm that your results replicate Table 3 column 1 in the paper.</em></p>
 <details>
 <summary>
 Code
 </summary>
-<div id="15f83313" class="cell" data-execution_count="11">
+<div id="765d6fd2" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">### Defining Variables</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>Y <span class="op">=</span> df_dropna[<span class="st">'gave'</span>]</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> sm.add_constant(df_dropna[<span class="st">'treatment'</span>])</span>
@@ -801,15 +795,15 @@ Code
 </details></section>
 <section id="regression---treatment-on-charitable-donation" class="level3">
 <h3 class="anchored" data-anchor-id="regression---treatment-on-charitable-donation">Regression - Treatment on Charitable Donation</h3>
-<div id="5fe1623b" class="cell" data-execution_count="12">
+<div id="2c2df0b8" class="cell" data-execution_count="12">
 <div class="cell-output cell-output-stdout">
 <pre><code>                          Probit Regression Results                           
 ==============================================================================
 Dep. Variable:                   gave   No. Observations:                46513
 Model:                         Probit   Df Residuals:                    46511
 Method:                           MLE   Df Model:                            1
-Date:                Sun, 28 Apr 2024   Pseudo R-squ.:                0.001300
-Time:                        14:59:14   Log-Likelihood:                -4707.8
+Date:                Sat, 11 May 2024   Pseudo R-squ.:                0.001300
+Time:                        10:39:07   Log-Likelihood:                -4707.8
 converged:                       True   LL-Null:                       -4713.9
 Covariance Type:            nonrobust   LLR p-value:                 0.0004642
 ==============================================================================
@@ -828,12 +822,11 @@ treatment      0.1004      0.029      3.466      0.001       0.044       0.157
 <section id="t-test-results---11-match-and-21-match" class="level3">
 <h3 class="anchored" data-anchor-id="t-test-results---11-match-and-21-match">T-Test Results - 1:1 Match and 2:1 Match</h3>
 <p>Next, I assess the effectiveness of different sizes of matched donations on the response rate.</p>
-<p><em>todo: Use a series of t-tests to test whether the size of the match ratio has an effect on whether people donate or not. For example, does the 2:1 match rate lead increase the likelihood that someone donates as compared to the 1:1 match rate? Do your results support the “figures suggest” comment the authors make on page 8?</em></p>
 <details>
 <summary>
 Code
 </summary>
-<div id="2f5a8b34" class="cell" data-execution_count="13">
+<div id="387d625f" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> ttest_ind</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># donations for 1:1 match and 2:1 match</span></span>
@@ -846,13 +839,12 @@ Code
 </details></section>
 <section id="section-5" class="level3">
 <h3 class="anchored" data-anchor-id="section-5"></h3>
-<div id="f59e3638" class="cell" data-execution_count="14">
+<div id="b6e6f21b" class="cell" data-execution_count="14">
 <div class="cell-output cell-output-stdout">
 <pre><code>T-stat: -1.0695278671529307
-P-value: 0.2848443758731765</code></pre>
+P-value: 0.28484437587317657</code></pre>
 </div>
 </div>
-<p><em>todo: Assess the same issue using a regression. Specifically, create the variable <code>ratio1</code> then regress <code>gave</code> on <code>ratio1</code>, <code>ratio2</code>, and <code>ratio3</code> (or alternatively, regress <code>gave</code> on the categorical variable <code>ratio</code>). Interpret the coefficients and their statistical precision.</em></p>
 </section>
 <section id="regressing-on-ratios" class="level3">
 <h3 class="anchored" data-anchor-id="regressing-on-ratios">Regressing on Ratios</h3>
@@ -860,7 +852,7 @@ P-value: 0.2848443758731765</code></pre>
 <summary>
 Code
 </summary>
-<div id="135ae5c5" class="cell" data-execution_count="15">
+<div id="9abb132f" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a new variable for the ratio</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>df_dropna[<span class="st">'ratio1'</span>] <span class="op">=</span> (df_dropna[<span class="st">'ratio'</span>] <span class="op">==</span> <span class="dv">1</span>).astype(<span class="bu">int</span>)</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -874,26 +866,28 @@ Code
 <span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>ratio_model <span class="op">=</span> sm.OLS(Y,X).fit()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/var/folders/n1/t0q_fh6x5ng4n3nhdjhlmbgw0000gp/T/ipykernel_84449/1727008199.py:2: SettingWithCopyWarning: 
+<pre><code>/var/folders/n1/t0q_fh6x5ng4n3nhdjhlmbgw0000gp/T/ipykernel_24187/1727008199.py:2: SettingWithCopyWarning:
+
+
 A value is trying to be set on a copy of a slice from a DataFrame.
 Try using .loc[row_indexer,col_indexer] = value instead
 
 See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-  df_dropna['ratio1'] = (df_dropna['ratio'] == 1).astype(int)</code></pre>
+</code></pre>
 </div>
 </div>
 </details></section>
 <section id="section-6" class="level3">
 <h3 class="anchored" data-anchor-id="section-6"></h3>
-<div id="35abf485" class="cell" data-execution_count="16">
+<div id="c0f21a61" class="cell" data-execution_count="16">
 <div class="cell-output cell-output-stdout">
 <pre><code>                            OLS Regression Results                            
 ==============================================================================
 Dep. Variable:                   gave   R-squared:                       0.000
 Model:                            OLS   Adj. R-squared:                  0.000
 Method:                 Least Squares   F-statistic:                     4.671
-Date:                Sun, 28 Apr 2024   Prob (F-statistic):            0.00289
-Time:                        14:59:14   Log-Likelihood:                 24505.
+Date:                Sat, 11 May 2024   Prob (F-statistic):            0.00289
+Time:                        10:39:07   Log-Likelihood:                 24505.
 No. Observations:               46513   AIC:                        -4.900e+04
 Df Residuals:                   46509   BIC:                        -4.897e+04
 Df Model:                           3                                         
@@ -920,40 +914,38 @@ Notes:
 <section id="section-7" class="level3">
 <h3 class="anchored" data-anchor-id="section-7"></h3>
 <p>The P value for the three ratios are all less than .05, suggesting that the 2:1 and 3:1 match ratios lead to a statistically significant increase in the likelihood that someone donates compared to the 1:1 match ratio. This is consistent with the results in Table 3 column 2 of the paper, which shows that the 2:1 and 3:1 match ratios lead to a statistically significant increase in the likelihood that someone donates compared to the 1:1 match ratio.</p>
-<p><em>todo: Calculate the response rate difference between the 1:1 and 2:1 match ratios and the 2:1 and 3:1 ratios. Do this directly from the data, and do it by computing the differences in the fitted coefficients of the previous regression. what do you conclude regarding the effectiveness of different sizes of matched donations?</em></p>
 <details>
 <summary>
 Code
 </summary>
-<div id="069497b9" class="cell" data-execution_count="17">
+<div id="a29e0ef4" class="cell" data-execution_count="17">
 <div class="cell-output cell-output-stdout">
 <pre><code>Response Rate Difference between 1:1 and 2:1 Match Ratios: -0.0021795099373574135
 Response Rate Difference between 2:1 and 3:1 Match Ratios: -0.000533513218346264
-Coefficient Difference between 1:1 and 2:1 Match Ratios: -0.0021795099373570666
-Coefficient Difference between 2:1 and 3:1 Match Ratios: -0.0005335132183442049</code></pre>
+Coefficient Difference between 1:1 and 2:1 Match Ratios: -0.0021795099373575115
+Coefficient Difference between 2:1 and 3:1 Match Ratios: -0.0005335132183461435</code></pre>
 </div>
 </div>
 </details></section>
 <section id="response-rate-and-coefficient-difference-between-ratios" class="level3">
 <h3 class="anchored" data-anchor-id="response-rate-and-coefficient-difference-between-ratios">Response Rate and Coefficient Difference between Ratios</h3>
-<div id="bed4042a" class="cell" data-execution_count="18">
+<div id="f8423ba3" class="cell" data-execution_count="18">
 <div class="cell-output cell-output-stdout">
 <pre><code>Response Rate Difference between 1:1 and 2:1 Match Ratios: -0.0021795099373574135
 Response Rate Difference between 2:1 and 3:1 Match Ratios: -0.000533513218346264
-Coefficient Difference between 1:1 and 2:1 Match Ratios: -0.0021795099373570666
-Coefficient Difference between 2:1 and 3:1 Match Ratios: -0.0005335132183442049</code></pre>
+Coefficient Difference between 1:1 and 2:1 Match Ratios: -0.0021795099373575115
+Coefficient Difference between 2:1 and 3:1 Match Ratios: -0.0005335132183461435</code></pre>
 </div>
 </div>
 </section>
 <section id="treatment-effect-on-size-of-charitable-contribution" class="level3">
 <h3 class="anchored" data-anchor-id="treatment-effect-on-size-of-charitable-contribution">Treatment effect on Size of Charitable Contribution</h3>
 <p>In this subsection, I analyze the effect of the size of matched donation on the size of the charitable contribution.</p>
-<p><em>todo: Calculate a t-test or run a bivariate linear regression of the donation amount on the treatment status. What do we learn from doing this analysis?</em></p>
 <details>
 <summary>
 Code
 </summary>
-<div id="ef02b726" class="cell" data-execution_count="19">
+<div id="fd8a4808" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>donation_amount_treatment <span class="op">=</span> df_dropna[df_dropna[<span class="st">'treatment'</span>] <span class="op">==</span> <span class="dv">1</span>][<span class="st">'amount'</span>]</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>donation_amount_control <span class="op">=</span> df_dropna[df_dropna[<span class="st">'control'</span>] <span class="op">==</span> <span class="dv">1</span>][<span class="st">'amount'</span>]</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co">#T-test</span></span>
@@ -962,19 +954,18 @@ Code
 </details></section>
 <section id="section-8" class="level3">
 <h3 class="anchored" data-anchor-id="section-8"></h3>
-<div id="e26e2de9" class="cell" data-execution_count="20">
+<div id="30ae785c" class="cell" data-execution_count="20">
 <div class="cell-output cell-output-stdout">
 <pre><code>T-stat: 2.1167886253100887
-P-value: 0.03428308609067126</code></pre>
+P-value: 0.03428308609067127</code></pre>
 </div>
 </div>
 <p>The T-stat of 2.1167 and P-value of .0343 indicates that the treatment group had a statistically significant higher average donation amount than the control group. This suggests that the treatment group donated more on average than the control group.</p>
-<p><em>todo: now limit the data to just people who made a donation and repeat the previous analysis. This regression allows you to analyze how much respondents donate conditional on donating some positive amount. Interpret the regression coefficients – what did we learn? Does the treatment coefficient have a causal interpretation?</em></p>
 <details>
 <summary>
 Code
 </summary>
-<div id="b23dcda0" class="cell" data-execution_count="21">
+<div id="3b801f26" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Filter out people who did not donate</span></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>df_donors <span class="op">=</span> df_dropna[df_dropna[<span class="st">'amount'</span>] <span class="op">&gt;</span> <span class="dv">0</span>]</span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -994,8 +985,8 @@ Code
 Dep. Variable:                 amount   R-squared:                       0.000
 Model:                            OLS   Adj. R-squared:                 -0.001
 Method:                 Least Squares   F-statistic:                    0.3300
-Date:                Sun, 28 Apr 2024   Prob (F-statistic):              0.566
-Time:                        14:59:14   Log-Likelihood:                -5002.1
+Date:                Sat, 11 May 2024   Prob (F-statistic):              0.566
+Time:                        10:39:07   Log-Likelihood:                -5002.1
 No. Observations:                 970   AIC:                         1.001e+04
 Df Residuals:                     968   BIC:                         1.002e+04
 Df Model:                           1                                         
@@ -1019,15 +1010,15 @@ Notes:
 </details></section>
 <section id="filtered-regression-results---treatment-on-charitable-donation-amount---conditional" class="level3">
 <h3 class="anchored" data-anchor-id="filtered-regression-results---treatment-on-charitable-donation-amount---conditional">Filtered Regression Results - Treatment on Charitable Donation Amount - Conditional</h3>
-<div id="ba40553c" class="cell" data-execution_count="22">
+<div id="702d00cc" class="cell" data-execution_count="22">
 <div class="cell-output cell-output-stdout">
 <pre><code>                            OLS Regression Results                            
 ==============================================================================
 Dep. Variable:                 amount   R-squared:                       0.000
 Model:                            OLS   Adj. R-squared:                 -0.001
 Method:                 Least Squares   F-statistic:                    0.3300
-Date:                Sun, 28 Apr 2024   Prob (F-statistic):              0.566
-Time:                        14:59:14   Log-Likelihood:                -5002.1
+Date:                Sat, 11 May 2024   Prob (F-statistic):              0.566
+Time:                        10:39:07   Log-Likelihood:                -5002.1
 No. Observations:                 970   AIC:                         1.001e+04
 Df Residuals:                     968   BIC:                         1.002e+04
 Df Model:                           1                                         
@@ -1049,7 +1040,6 @@ Notes:
 </div>
 </div>
 <p>The Filtered Model shows that the treatment coefficient is not statistically significant at the 95% confidence level. This suggests that the treatment group did not donate significantly more on average than the control group conditional on donating some positive amount. This is consistent with the results in Table 2a Panel B of the paper, which shows that the treatment coefficient is not statistically significant at the 95% confidence level.</p>
-<p><em>todo: Make two plots: one for the treatment group and one for the control. Each plot should be a histogram of the donation amounts only among people who donated. Add a red vertical bar or some other annotation to indicate the sample average for each plot.</em></p>
 </section>
 <section id="histogram-of-charitable-donation-amounts-by-treatment-group" class="level3">
 <h3 class="anchored" data-anchor-id="histogram-of-charitable-donation-amounts-by-treatment-group">Histogram of Charitable Donation Amounts by Treatment Group</h3>
@@ -1057,7 +1047,7 @@ Notes:
 <summary>
 Code
 </summary>
-<div id="123cb4ef" class="cell" data-execution_count="23">
+<div id="6f6e24fa" class="cell" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>donation_amount_control <span class="op">=</span> df_donors[df_donors[<span class="st">'control'</span>] <span class="op">==</span> <span class="dv">1</span>][<span class="st">'amount'</span>]</span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>donation_amount_treatment <span class="op">=</span> df_donors[df_donors[<span class="st">'treatment'</span>] <span class="op">==</span> <span class="dv">1</span>][<span class="st">'amount'</span>]</span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1085,7 +1075,7 @@ Code
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="hw1_questions_files/figure-html/cell-24-output-1.png" width="1142" height="566" class="figure-img"></p>
+<p><img src="hw1_questions_files/figure-html/cell-24-output-1.png" width="1141" height="564" class="figure-img"></p>
 </figure>
 </div>
 </div>
@@ -1093,11 +1083,11 @@ Code
 </details></section>
 <section id="section-9" class="level3">
 <h3 class="anchored" data-anchor-id="section-9"></h3>
-<div id="62d50e10" class="cell" data-execution_count="24">
+<div id="d56711b6" class="cell" data-execution_count="24">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="hw1_questions_files/figure-html/cell-25-output-1.png" width="1142" height="566" class="figure-img"></p>
+<p><img src="hw1_questions_files/figure-html/cell-25-output-1.png" width="1141" height="564" class="figure-img"></p>
 </figure>
 </div>
 </div>
@@ -1111,12 +1101,11 @@ Code
 <p>Further suppose that the true distribution of respondents who do get a charitable donation match of any size is Bernoulli with probability p=0.022 that a donation is made.</p>
 <section id="law-of-large-numbers" class="level3">
 <h3 class="anchored" data-anchor-id="law-of-large-numbers">Law of Large Numbers</h3>
-<p><em>to do: Make a plot like those on slide 43 from our first class and explain the plot to the reader (Likert Plot, Binary Plot, Continious Plot). To do this, you will simulate 10,000 draws from the control distribution and 10,000 draws from the treatment distribution. You’ll then calculate a vector of 10,000 differences, and then you’ll plot the cumulative average of that vector of differences. Comment on whether the cumulative average approaches the true difference in means.</em></p>
 <details>
 <summary>
 Code
 </summary>
-<div id="3ab6787a" class="cell" data-execution_count="25">
+<div id="550dcd4c" class="cell" data-execution_count="25">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate 10,000 draws from the control and treatment distributions</span></span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>dist_control <span class="op">=</span> np.random.normal(loc<span class="op">=</span>avg_donation_control, scale<span class="op">=</span>np.std(donation_amount_control), size<span class="op">=</span><span class="dv">10000</span>)</span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>dist_treatment <span class="op">=</span> np.random.normal(loc<span class="op">=</span>avg_donation_treatment, scale<span class="op">=</span>np.std(donation_amount_treatment), size<span class="op">=</span><span class="dv">10000</span>)</span>
@@ -1146,11 +1135,11 @@ Code
 </details></section>
 <section id="section-10" class="level3">
 <h3 class="anchored" data-anchor-id="section-10"></h3>
-<div id="fc2ef305" class="cell" data-execution_count="26">
+<div id="98026d58" class="cell" data-execution_count="26">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="hw1_questions_files/figure-html/cell-27-output-1.png" width="976" height="523" class="figure-img"></p>
+<p><img src="hw1_questions_files/figure-html/cell-27-output-1.png" width="968" height="523" class="figure-img"></p>
 </figure>
 </div>
 </div>
@@ -1159,12 +1148,11 @@ Code
 </section>
 <section id="central-limit-theorem" class="level3">
 <h3 class="anchored" data-anchor-id="central-limit-theorem">Central Limit Theorem</h3>
-<p><em>to do: Make 4 histograms like those on slide 44 from our first class at sample sizes 50, 200, 500, and 1000 and explain these plots to the reader. To do this for a sample size of e.g.&nbsp;50, take 50 draws from each of the control and treatment distributions, and calculate the average difference between those draws. Then repeat that process 999 more times so that you have 1000 averages. Plot the histogram of those averages. Comment on whether zero is in the “middle” of the distribution or whether it’s in the “tail.”</em></p>
 <details>
 <summary>
 Code
 </summary>
-<div id="1d5f3a04" class="cell" data-execution_count="27">
+<div id="ae9dc1ab" class="cell" data-execution_count="27">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.ticker <span class="im">as</span> mtick</span>
@@ -1214,7 +1202,7 @@ Code
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="hw1_questions_files/figure-html/cell-28-output-1.png" width="1142" height="2294" class="figure-img"></p>
+<p><img src="hw1_questions_files/figure-html/cell-28-output-1.png" width="1141" height="2292" class="figure-img"></p>
 </figure>
 </div>
 </div>
@@ -1222,11 +1210,11 @@ Code
 </details></section>
 <section id="section-11" class="level3">
 <h3 class="anchored" data-anchor-id="section-11"></h3>
-<div id="4a1075aa" class="cell" data-execution_count="28">
+<div id="fcb8a972" class="cell" data-execution_count="28">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="hw1_questions_files/figure-html/cell-29-output-1.png" width="1142" height="2294" class="figure-img"></p>
+<p><img src="hw1_questions_files/figure-html/cell-29-output-1.png" width="1141" height="2292" class="figure-img"></p>
 </figure>
 </div>
 </div>

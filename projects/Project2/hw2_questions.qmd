@@ -54,7 +54,6 @@ print(df_blueprinty)
 
 ### Histogram and Means of Number of Patents by Customer Status
 
-todo: Compare histograms and means of number of patents by customer status. What do you observe?_
 
 <details>
 <summary>Code</summary>
@@ -116,7 +115,6 @@ The mean for the number of patents for 197 customers in this dataset is 4.1, whi
 
 Blueprinty customers are not selected at random. It may be important to account for systematic differences in the age and regional location of customers vs non-customers.
 
-_todo: Compare regions and ages by customer status. What do you observe?_
 
 ###
 <details>
@@ -198,7 +196,6 @@ Despite the region, customers tend to be younger than non-customers. This could 
 
 Since our outcome variable of interest can only be small integer values per a set unit of time, we can use a Poisson density to model the number of patents awarded to each engineering firm over the last 5 years. We start by estimating a simple Poisson model via Maximum Likelihood.
 
-_todo: Write down mathematically the likelihood for_ $Y \sim \text{Poisson}(\lambda)$. Note that $f(Y|\lambda) = e^{-\lambda}\lambda^Y/Y!$.
 <details>
 <summary>Code</summary>
 
@@ -261,7 +258,6 @@ print(f"Likelihood for $y\sim\text(poisson)(\lambda)$formula) = {formula}")
 
 
 ### Log-Likelihoods
-_todo: Code the likelihood (or log-likelihood) function for the Poisson model. This is a function of lambda and Y. For example:_ poisson_loglikelihood <- function(lambda, Y)...
 
 <details>
 <summary>Code</summary>
@@ -372,8 +368,6 @@ plt.show()
 
 ### MLE Estimation via likelihood optimization
 
-_todo: Find the MLE by optimizing your likelihood function with optim() in R or sp.optimize() in Python._
-
 ###
 <details>
 <summary>Code</summary>
@@ -443,9 +437,6 @@ print(F"MLE for Lambda: {mle.x[0]}")
 Next, we extend our simple Poisson model to a Poisson Regression Model such that $Y_i = \text{Poisson}(\lambda_i)$ where $\lambda_i = \exp(X_i'\beta)$. The interpretation is that the success 
 rate of patent awards is not constant across all firms ($\lambda$) but rather is a function of firm characteristics $X_i$. Specifically, we will use the covariates age, age squared, region, and 
 whether the firm is a customer of Blueprinty.
-
-_todo: Update your likelihood or log-likelihood function with an additional argument to take in a covariate matrix X. Also change the parameter of the model from lambda to the beta vector. 
-In this model, lambda must be a positive number, so we choose the inverse link function g() to be exp() so that_ $\lambda_i = e^{X_i'\beta}$. _For example:_ poisson_regression_likelihood <- function(beta, Y, X)...
 
 <details>
 <summary>Code</summary>
@@ -526,7 +517,6 @@ print(f"Estimated betas: {result.x}")
 
 ### Standard Errors using  Python sm.GLM() function
 
-_todo: Use your function along with R's optim() or Python's sp.optimize() to find the MLE vector and the Hessian of the Poisson model with covariates. Specifically, the first column of X should be all 1's to enable a constant term in the model, and the subsequent columns should be age, age squared, binary variables for all but one of the regions, and the binary customer variable. Use the Hessian to find standard errors of the beta parameter estimates and present a table of coefficients and standard errors._
 
 <details>
 <summary>Code</summary>
@@ -618,8 +608,6 @@ AirBnB is a popular platform for booking short-term rentals. In March 2017, stud
 
 ::::
 
-
-_todo: Assume the number of reviews is a good proxy for the number of bookings. Perform some exploratory data analysis to get a feel for the data, handle or drop observations with missing values on relevant variables, build one or more models (e.g., a poisson regression model for the number of bookings as proxied by the number of reviews), and interpret model coefficients to describe variation in the number of reviews as a function of the variables provided._
 
 
 ### Summary of Results

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Peter Atkins">
-<meta name="dcterms.date" content="2024-04-28">
+<meta name="dcterms.date" content="2024-05-11">
 
 <title>Peter Atkins - Poisson Regression Examples</title>
 <style>
@@ -237,7 +237,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">April 28, 2024</p>
+      <p class="date">May 11, 2024</p>
     </div>
   </div>
   
@@ -263,7 +263,7 @@ window.Quarto = {
 <summary>
 Code
 </summary>
-<div id="96c79d1b" class="cell" data-execution_count="1">
+<div id="6a0e0054" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -361,12 +361,11 @@ Code
 </details></section>
 <section id="histogram-and-means-of-number-of-patents-by-customer-status" class="level3">
 <h3 class="anchored" data-anchor-id="histogram-and-means-of-number-of-patents-by-customer-status">Histogram and Means of Number of Patents by Customer Status</h3>
-<p>todo: Compare histograms and means of number of patents by customer status. What do you observe?_</p>
 <details>
 <summary>
 Code
 </summary>
-<div id="23323f75" class="cell" data-execution_count="2">
+<div id="fdd4764d" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>blueprinty_data <span class="op">=</span> <span class="st">"/Users/peteratkins/Downloads/blueprinty.csv"</span></span>
@@ -401,7 +400,7 @@ Name: patents, dtype: float64</code></pre>
 </details></section>
 <section id="section" class="level3">
 <h3 class="anchored" data-anchor-id="section"></h3>
-<div id="ad046216" class="cell" data-execution_count="3">
+<div id="d06fbf8f" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-stdout">
 <pre><code>iscustomer
 Is Customer       4.091371
@@ -425,7 +424,6 @@ Name: customer_id, dtype: int64</code></pre>
 <section id="regional-and-age-differences-by-customer-status" class="level3">
 <h3 class="anchored" data-anchor-id="regional-and-age-differences-by-customer-status">Regional and Age Differences by Customer Status</h3>
 <p>Blueprinty customers are not selected at random. It may be important to account for systematic differences in the age and regional location of customers vs non-customers.</p>
-<p><em>todo: Compare regions and ages by customer status. What do you observe?</em></p>
 </section>
 <section id="section-1" class="level3">
 <h3 class="anchored" data-anchor-id="section-1"></h3>
@@ -433,7 +431,7 @@ Name: customer_id, dtype: int64</code></pre>
 <summary>
 Code
 </summary>
-<div id="890f624b" class="cell" data-execution_count="4">
+<div id="51bb7255" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>blueprinty_data <span class="op">=</span> <span class="st">"/Users/peteratkins/Downloads/blueprinty.csv"</span></span>
@@ -474,7 +472,7 @@ Code
 </details></section>
 <section id="section-2" class="level3">
 <h3 class="anchored" data-anchor-id="section-2"></h3>
-<div id="c9e20f9e" class="cell" data-execution_count="5">
+<div id="e315f831" class="cell" data-execution_count="5">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -488,12 +486,11 @@ Code
 <section id="estimation-of-simple-poisson-model" class="level3">
 <h3 class="anchored" data-anchor-id="estimation-of-simple-poisson-model">Estimation of Simple Poisson Model</h3>
 <p>Since our outcome variable of interest can only be small integer values per a set unit of time, we can use a Poisson density to model the number of patents awarded to each engineering firm over the last 5 years. We start by estimating a simple Poisson model via Maximum Likelihood.</p>
-<em>todo: Write down mathematically the likelihood for</em> <span class="math inline">\(Y \sim \text{Poisson}(\lambda)\)</span>. Note that <span class="math inline">\(f(Y|\lambda) = e^{-\lambda}\lambda^Y/Y!\)</span>.
 <details>
 <summary>
 Code
 </summary>
-<div id="83bb257c" class="cell" data-execution_count="6">
+<div id="c8258623" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -528,7 +525,7 @@ Likelihood for $y\sim   ext(poisson)(\lambda)$formula) = $$L(\lambda|Y) = \prod_
 </details></section>
 <section id="section-3" class="level3">
 <h3 class="anchored" data-anchor-id="section-3"></h3>
-<div id="d6b1e15f" class="cell" data-execution_count="7">
+<div id="61f41dd2" class="cell" data-execution_count="7">
 <div class="cell-output cell-output-stdout">
 <pre><code>Estimated Lambda = 3.684667
 Likelihoods = [0.02510553 0.20932107 0.19281961 ... 0.19281961 0.20932107 0.09250553]
@@ -539,12 +536,11 @@ Likelihood for $y\sim   ext(poisson)(\lambda)$formula) = $$L(\lambda|Y) = \prod_
 </section>
 <section id="log-likelihoods" class="level3">
 <h3 class="anchored" data-anchor-id="log-likelihoods">Log-Likelihoods</h3>
-<p><em>todo: Code the likelihood (or log-likelihood) function for the Poisson model. This is a function of lambda and Y. For example:</em> poisson_loglikelihood &lt;- function(lambda, Y)…</p>
 <details>
 <summary>
 Code
 </summary>
-<div id="6b234031" class="cell" data-execution_count="8">
+<div id="818ad72f" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -567,7 +563,7 @@ Code
 </details></section>
 <section id="section-4" class="level3">
 <h3 class="anchored" data-anchor-id="section-4"></h3>
-<div id="9435deb3" class="cell" data-execution_count="9">
+<div id="233c4e42" class="cell" data-execution_count="9">
 <div class="cell-output cell-output-stdout">
 <pre><code>Total Log Likelihood = -3367.6837722351183</code></pre>
 </div>
@@ -580,7 +576,7 @@ Code
 <summary>
 Code
 </summary>
-<div id="a0aa4fa6" class="cell" data-execution_count="10">
+<div id="b06f5cba" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -607,7 +603,7 @@ Code
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="hw2_questions_files/figure-html/cell-11-output-1.png" width="844" height="523" class="figure-img"></p>
+<p><img src="hw2_questions_files/figure-html/cell-11-output-1.png" width="845" height="523" class="figure-img"></p>
 </figure>
 </div>
 </div>
@@ -615,11 +611,11 @@ Code
 </details></section>
 <section id="section-5" class="level3">
 <h3 class="anchored" data-anchor-id="section-5"></h3>
-<div id="d98768d5" class="cell" data-execution_count="11">
+<div id="8865ef6e" class="cell" data-execution_count="11">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="hw2_questions_files/figure-html/cell-12-output-1.png" width="844" height="523" class="figure-img"></p>
+<p><img src="hw2_questions_files/figure-html/cell-12-output-1.png" width="845" height="523" class="figure-img"></p>
 </figure>
 </div>
 </div>
@@ -627,7 +623,6 @@ Code
 </section>
 <section id="mle-estimation-via-likelihood-optimization" class="level3">
 <h3 class="anchored" data-anchor-id="mle-estimation-via-likelihood-optimization">MLE Estimation via likelihood optimization</h3>
-<p><em>todo: Find the MLE by optimizing your likelihood function with optim() in R or sp.optimize() in Python.</em></p>
 </section>
 <section id="section-6" class="level3">
 <h3 class="anchored" data-anchor-id="section-6"></h3>
@@ -635,7 +630,7 @@ Code
 <summary>
 Code
 </summary>
-<div id="79fb79b0" class="cell" data-execution_count="12">
+<div id="ff67872e" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -668,7 +663,7 @@ Code
 </details></section>
 <section id="section-7" class="level3">
 <h3 class="anchored" data-anchor-id="section-7"></h3>
-<div id="28ae065b" class="cell" data-execution_count="13">
+<div id="66c8f16a" class="cell" data-execution_count="13">
 <div class="cell-output cell-output-stdout">
 <pre><code>MLE for Lambda: 3.684666624262132</code></pre>
 </div>
@@ -677,12 +672,11 @@ Code
 <section id="estimation-of-poisson-regression-model" class="level3">
 <h3 class="anchored" data-anchor-id="estimation-of-poisson-regression-model">Estimation of Poisson Regression Model</h3>
 <p>Next, we extend our simple Poisson model to a Poisson Regression Model such that <span class="math inline">\(Y_i = \text{Poisson}(\lambda_i)\)</span> where <span class="math inline">\(\lambda_i = \exp(X_i'\beta)\)</span>. The interpretation is that the success rate of patent awards is not constant across all firms (<span class="math inline">\(\lambda\)</span>) but rather is a function of firm characteristics <span class="math inline">\(X_i\)</span>. Specifically, we will use the covariates age, age squared, region, and whether the firm is a customer of Blueprinty.</p>
-<p><em>todo: Update your likelihood or log-likelihood function with an additional argument to take in a covariate matrix X. Also change the parameter of the model from lambda to the beta vector. In this model, lambda must be a positive number, so we choose the inverse link function g() to be exp() so that</em> <span class="math inline">\(\lambda_i = e^{X_i'\beta}\)</span>. <em>For example:</em> poisson_regression_likelihood &lt;- function(beta, Y, X)…</p>
 <details>
 <summary>
 Code
 </summary>
-<div id="9ee57480" class="cell" data-execution_count="14">
+<div id="46ebb20e" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -712,30 +706,29 @@ Code
 <span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Estimated betas: </span><span class="sc">{</span>result<span class="sc">.</span>x<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Estimated betas: [ 8.94194096e-02  4.90597957e+00 -5.42055336e+00 -6.79094218e-03
-  1.66709325e-02 -4.23976775e-02  2.06320208e-02  3.24873433e-03
-  5.26453024e-02 -5.23655603e-02]</code></pre>
+<pre><code>Estimated betas: [ 8.94195619e-02  4.90597763e+00 -5.42055137e+00 -6.42395258e-03
+  1.71753332e-02 -4.20575528e-02  2.09752125e-02  3.65900439e-03
+  5.26237707e-02 -5.23871097e-02]</code></pre>
 </div>
 </div>
 </details></section>
 <section id="section-8" class="level3">
 <h3 class="anchored" data-anchor-id="section-8"></h3>
-<div id="4abdbb83" class="cell" data-execution_count="15">
+<div id="c48b3c6b" class="cell" data-execution_count="15">
 <div class="cell-output cell-output-stdout">
-<pre><code>Estimated betas: [ 8.94194096e-02  4.90597957e+00 -5.42055336e+00 -6.79094218e-03
-  1.66709325e-02 -4.23976775e-02  2.06320208e-02  3.24873433e-03
-  5.26453024e-02 -5.23655603e-02]</code></pre>
+<pre><code>Estimated betas: [ 8.94195619e-02  4.90597763e+00 -5.42055137e+00 -6.42395258e-03
+  1.71753332e-02 -4.20575528e-02  2.09752125e-02  3.65900439e-03
+  5.26237707e-02 -5.23871097e-02]</code></pre>
 </div>
 </div>
 </section>
 <section id="standard-errors-using-python-sm.glm-function" class="level3">
 <h3 class="anchored" data-anchor-id="standard-errors-using-python-sm.glm-function">Standard Errors using Python sm.GLM() function</h3>
-<p><em>todo: Use your function along with R’s optim() or Python’s sp.optimize() to find the MLE vector and the Hessian of the Poisson model with covariates. Specifically, the first column of X should be all 1’s to enable a constant term in the model, and the subsequent columns should be age, age squared, binary variables for all but one of the regions, and the binary customer variable. Use the Hessian to find standard errors of the beta parameter estimates and present a table of coefficients and standard errors.</em></p>
 <details>
 <summary>
 Code
 </summary>
-<div id="e22ce81d" class="cell" data-execution_count="16">
+<div id="40b0c0fc" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
@@ -766,8 +759,8 @@ Model:                            GLM   Df Residuals:                     1491
 Model Family:                 Poisson   Df Model:                            8
 Link Function:                    Log   Scale:                          1.0000
 Method:                          IRLS   Log-Likelihood:                -3275.7
-Date:                Sun, 28 Apr 2024   Deviance:                       2178.4
-Time:                        18:55:59   Pearson chi2:                 2.11e+03
+Date:                Sat, 11 May 2024   Deviance:                       2178.4
+Time:                        10:17:57   Pearson chi2:                 2.11e+03
 No. Iterations:                     5   Pseudo R-squ. (CS):             0.1155
 Covariance Type:            nonrobust                                         
 =============================================================================================
@@ -790,7 +783,7 @@ iscustomer_Not a Customer    -0.1753      0.060     -2.932      0.003      -0.29
 </details></section>
 <section id="section-9" class="level3">
 <h3 class="anchored" data-anchor-id="section-9"></h3>
-<div id="a4c15f6c" class="cell" data-execution_count="17">
+<div id="3571747a" class="cell" data-execution_count="17">
 <div class="cell-output cell-output-stdout">
 <pre><code>                 Generalized Linear Model Regression Results                  
 ==============================================================================
@@ -799,8 +792,8 @@ Model:                            GLM   Df Residuals:                     1491
 Model Family:                 Poisson   Df Model:                            8
 Link Function:                    Log   Scale:                          1.0000
 Method:                          IRLS   Log-Likelihood:                -3275.7
-Date:                Sun, 28 Apr 2024   Deviance:                       2178.4
-Time:                        18:55:59   Pearson chi2:                 2.11e+03
+Date:                Sat, 11 May 2024   Deviance:                       2178.4
+Time:                        10:17:57   Pearson chi2:                 2.11e+03
 No. Iterations:                     5   Pseudo R-squ. (CS):             0.1155
 Covariance Type:            nonrobust                                         
 =============================================================================================
@@ -859,7 +852,6 @@ Variable Definitions
 </div>
 </div>
 </div>
-<p><em>todo: Assume the number of reviews is a good proxy for the number of bookings. Perform some exploratory data analysis to get a feel for the data, handle or drop observations with missing values on relevant variables, build one or more models (e.g., a poisson regression model for the number of bookings as proxied by the number of reviews), and interpret model coefficients to describe variation in the number of reviews as a function of the variables provided.</em></p>
 </section>
 <section id="summary-of-results" class="level3">
 <h3 class="anchored" data-anchor-id="summary-of-results">Summary of Results</h3>
@@ -867,7 +859,7 @@ Variable Definitions
 <summary>
 Code
 </summary>
-<div id="16d36e7d" class="cell" data-execution_count="18">
+<div id="4f6d7b09" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
@@ -944,8 +936,8 @@ Model:                            GLM   Df Residuals:                    30129
 Model Family:                 Poisson   Df Model:                           10
 Link Function:                    Log   Scale:                          1.0000
 Method:                          IRLS   Log-Likelihood:            -3.9147e+05
-Date:                Sun, 28 Apr 2024   Deviance:                   6.6155e+05
-Time:                        18:56:00   Pearson chi2:                 7.99e+05
+Date:                Sat, 11 May 2024   Deviance:                   6.6155e+05
+Time:                        10:17:58   Pearson chi2:                 7.99e+05
 No. Iterations:                     5   Pseudo R-squ. (CS):              1.000
 Covariance Type:            nonrobust                                         
 =============================================================================================
@@ -965,29 +957,35 @@ instant_bookable              0.6482      0.003    220.862      0.000       0.64
 =============================================================================================</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/var/folders/n1/t0q_fh6x5ng4n3nhdjhlmbgw0000gp/T/ipykernel_7857/773579580.py:8: SettingWithCopyWarning: 
+<pre><code>/var/folders/n1/t0q_fh6x5ng4n3nhdjhlmbgw0000gp/T/ipykernel_10637/773579580.py:8: SettingWithCopyWarning:
+
+
 A value is trying to be set on a copy of a slice from a DataFrame.
 Try using .loc[row_indexer,col_indexer] = value instead
 
 See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-  df_airbnb['days'] = (pd.to_datetime(df_airbnb['last_scraped']) - pd.to_datetime(df_airbnb['host_since'])).dt.days
-/var/folders/n1/t0q_fh6x5ng4n3nhdjhlmbgw0000gp/T/ipykernel_7857/773579580.py:9: SettingWithCopyWarning: 
+
+/var/folders/n1/t0q_fh6x5ng4n3nhdjhlmbgw0000gp/T/ipykernel_10637/773579580.py:9: SettingWithCopyWarning:
+
+
 A value is trying to be set on a copy of a slice from a DataFrame.
 Try using .loc[row_indexer,col_indexer] = value instead
 
 See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-  df_airbnb['instant_bookable'] = df_airbnb['instant_bookable'].map({'t': 1, 'f': 0})
-/var/folders/n1/t0q_fh6x5ng4n3nhdjhlmbgw0000gp/T/ipykernel_7857/773579580.py:10: SettingWithCopyWarning: 
+
+/var/folders/n1/t0q_fh6x5ng4n3nhdjhlmbgw0000gp/T/ipykernel_10637/773579580.py:10: SettingWithCopyWarning:
+
+
 A value is trying to be set on a copy of a slice from a DataFrame.
 Try using .loc[row_indexer,col_indexer] = value instead
 
 See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-  df_airbnb['room_type'] = df_airbnb['room_type'].map({'Entire home/apt': 0, 'Private room': 1, 'Shared room': 2})</code></pre>
+</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="hw2_questions_files/figure-html/cell-19-output-3.png" width="1430" height="950" class="figure-img"></p>
+<p><img src="hw2_questions_files/figure-html/cell-19-output-3.png" width="1430" height="949" class="figure-img"></p>
 </figure>
 </div>
 </div>
@@ -995,11 +993,11 @@ See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stab
 </details></section>
 <section id="section-10" class="level3">
 <h3 class="anchored" data-anchor-id="section-10"></h3>
-<div id="74d0af9f" class="cell" data-execution_count="19">
+<div id="b9ab1485" class="cell" data-execution_count="19">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="hw2_questions_files/figure-html/cell-20-output-1.png" width="1430" height="950" class="figure-img"></p>
+<p><img src="hw2_questions_files/figure-html/cell-20-output-1.png" width="1430" height="949" class="figure-img"></p>
 </figure>
 </div>
 </div>
@@ -1011,8 +1009,8 @@ Model:                            GLM   Df Residuals:                    30129
 Model Family:                 Poisson   Df Model:                           10
 Link Function:                    Log   Scale:                          1.0000
 Method:                          IRLS   Log-Likelihood:            -3.9147e+05
-Date:                Sun, 28 Apr 2024   Deviance:                   6.6155e+05
-Time:                        18:56:01   Pearson chi2:                 7.99e+05
+Date:                Sat, 11 May 2024   Deviance:                   6.6155e+05
+Time:                        10:17:59   Pearson chi2:                 7.99e+05
 No. Iterations:                     5   Pseudo R-squ. (CS):              1.000
 Covariance Type:            nonrobust                                         
 =============================================================================================
