@@ -1,5 +1,5 @@
 ---
-title: "Poisson Regression Examples"
+title: "MNL & Conjoint Analysis"
 author: "Peter Atkins"
 date: today
 callout-appearance: minimal # this hides the blue "i" icon on .callout-notes
