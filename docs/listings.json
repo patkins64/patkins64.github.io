@@ -2,8 +2,9 @@
   {
     "listing": "/projects.html",
     "items": [
-      "/projects/Project 3/hw3_questions.html",
       "/projects/Project1/hw1_questions.html",
+      "/projects/Project3/hw3_questions.html",
+      "/projects/Project4/hw4_questions.html",
       "/projects/Project2/hw2_questions.html"
     ]
   },

@@ -1,0 +1,534 @@
+---
+title: "Key Drivers Analysis"
+author: "Peter Atkins"
+date: today
+---
+
+
+### Data
+The data imported reflects 10 different brands - labeled 1-10, and 940 different products ('id' column') accross those 10 brands. The data includes the following columns: Satisfaction (on a scale of 1 being the lowest and 5 being the highest), and nine binary variables (1 is True, 0 is False) that represent different aspects of customer satisfaction pertaining to certian aspects of a payment card on customer satisfaction with that payment card. These 9 variables are: satisfaction, trust, build, differs, easy, appealing, rewarding, popular, service, and impact. This report will create a Pearson correlation, Polychoric correlations, standardized multiple regression coefficients, LMG/Shapley Values, Johnson's epilion, and display the mean decrease in the gini coefficient from a random forest. Lastly, I will make a matrix with all the measures in the rows and the correlation type in the columns.
+
+
+<details>
+<summary>Code</summary>
+
+```{python}
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import statsmodels.api as sm
+from statsmodels.formula.api import ols
+import statsmodels.formula.api as smf
+import scipy.stats as stats
+from scipy.stats import ttest_ind
+import numpy as np
+from scipy.stats import norm
+from scipy.optimize import minimize
+from scipy.optimize import minimize_scalar
+import pingouin as pg
+import shap
+import xgboost as xgb
+from itertools import combinations
+from sklearn.linear_model import LinearRegression
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.model_selection import train_test_split
+
+drivers_data = "/Users/peteratkins/Desktop/drivers_data.csv"
+df_drivers = pd.read_csv(drivers_data)
+
+print(df_drivers.head())
+
+
+```
+
+
+### Pearson Correlation
+
+
+<details>
+<summary>Code</summary>
+
+```{python}
+
+pearson_corr = df_drivers.corr()
+pearson_satisfaction_corr = pearson_corr['satisfaction']
+pearson_satisfaction_corr = pearson_satisfaction_corr.drop(['satisfaction', 'brand', 'id'])
+pearson_satisfaction_corr = pearson_satisfaction_corr.to_frame().reset_index()
+pearson_satisfaction_corr.columns = ['Perception', 'Pearson Correlation']
+pearson_satisfaction_corr['Pearson Correlation'] = pearson_satisfaction_corr['Pearson Correlation'].map('{:.1%}'.format)
+```
+
+###
+
+```{python}
+#| echo: False
+
+pearson_corr = df_drivers.corr()
+pearson_satisfaction_corr = pearson_corr['satisfaction']
+pearson_satisfaction_corr = pearson_satisfaction_corr.drop(['satisfaction', 'brand', 'id'])
+pearson_satisfaction_corr = pearson_satisfaction_corr.to_frame().reset_index()
+pearson_satisfaction_corr.columns = ['Perception', 'Pearson Correlation']
+
+# Convert correlation to percentage format for printing
+pearson_satisfaction_corr_print = pearson_satisfaction_corr.copy()
+pearson_satisfaction_corr_print['Pearson Correlation'] = pearson_satisfaction_corr_print['Pearson Correlation'].map('{:.1%}'.format)
+print(pearson_satisfaction_corr_print.to_string(index=False))
+
+# Plotting
+plt.figure(figsize=(10, 8))
+plt.barh(pearson_satisfaction_corr['Perception'], pearson_satisfaction_corr['Pearson Correlation'], color='skyblue')
+plt.xlabel('Pearson Correlation')
+plt.title('Pearson Correlation of Perceptions with Satisfaction')
+plt.gca().invert_yaxis()  # Invert y-axis to have highest correlation at the top
+plt.show()
+
+```
+
+
+
+### Polychoric Correlations
+
+
+<details>
+<summary>Code</summary>
+
+```{python}
+spearman_corr = df_drivers.corr(method='spearman')
+spearman_satisfaction_corr = spearman_corr['satisfaction']
+spearman_satisfaction_corr = spearman_satisfaction_corr.drop(['satisfaction', 'brand', 'id'])
+spearman_satisfaction_corr = spearman_satisfaction_corr.to_frame().reset_index()
+spearman_satisfaction_corr.columns = ['Perception', 'Polychoric Correlation']
+spearman_satisfaction_corr['Polychoric Correlation'] = spearman_satisfaction_corr['Polychoric Correlation'].map('{:.1%}'.format)
+print(spearman_satisfaction_corr.to_string(index=False))
+
+```
+
+###
+
+```{python}
+#| echo: False
+# Your existing code
+spearman_corr = df_drivers.corr(method='spearman')
+spearman_satisfaction_corr = spearman_corr['satisfaction']
+spearman_satisfaction_corr = spearman_satisfaction_corr.drop(['satisfaction', 'brand', 'id'])
+spearman_satisfaction_corr = spearman_satisfaction_corr.to_frame().reset_index()
+spearman_satisfaction_corr.columns = ['Perception', 'Polychoric Correlation']
+
+# Convert correlation to percentage format for printing
+spearman_satisfaction_corr_print = spearman_satisfaction_corr.copy()
+spearman_satisfaction_corr_print['Polychoric Correlation'] = spearman_satisfaction_corr_print['Polychoric Correlation'].map('{:.1%}'.format)
+print(spearman_satisfaction_corr_print.to_string(index=False))
+
+# Plotting
+plt.figure(figsize=(10, 8))
+plt.barh(spearman_satisfaction_corr['Perception'], spearman_satisfaction_corr['Polychoric Correlation'], color='skyblue')
+plt.xlabel('Polychoric Correlation')
+plt.title('Polychoric Correlation of Perceptions with Satisfaction')
+plt.gca().invert_yaxis()  # Invert y-axis to have highest correlation at the top
+plt.show()
+
+```
+
+
+### Standardized Multiple Regression Coefficients
+
+
+<details>
+<summary>Code</summary>
+
+```{python}
+formula = 'satisfaction ~ trust + build + differs + easy + appealing + rewarding + popular + service + impact'
+
+model = ols(formula, data=df_drivers).fit()
+
+standardized_coeffs = model.params / df_drivers.std()
+
+predictor_coeffs = standardized_coeffs.drop(['Intercept', 'satisfaction', 'brand', 'id'])
+
+predictor_coeffs = predictor_coeffs.to_frame().reset_index()
+
+predictor_coeffs.columns = ['Perception', 'Standardized Coefficient']
+
+order = ['trust', 'build', 'differs', 'easy', 'appealing', 'rewarding', 'popular', 'service', 'impact']
+predictor_coeffs = predictor_coeffs.set_index('Perception').reindex(order).reset_index()
+
+predictor_coeffs['Standardized Coefficient'] = predictor_coeffs['Standardized Coefficient'].map('{:.1%}'.format)
+
+print(predictor_coeffs.to_string(index=False))
+
+
+```
+
+###
+
+```{python}
+#| echo: False
+import matplotlib.pyplot as plt
+from statsmodels.formula.api import ols
+# Define the formula for the regression
+formula = 'satisfaction ~ trust + build + differs + easy + appealing + rewarding + popular + service + impact'
+
+# Fit the regression model
+model = ols(formula, data=df_drivers).fit()
+
+# Get the standardized coefficients
+standardized_coeffs = model.params / df_drivers.std()
+
+# Select the coefficients for the predictors
+predictor_coeffs = standardized_coeffs.drop(['Intercept', 'satisfaction', 'brand', 'id'])
+
+# Convert the series to a DataFrame and reset the index
+predictor_coeffs = predictor_coeffs.to_frame().reset_index()
+
+# Rename the columns
+predictor_coeffs.columns = ['Perception', 'Standardized Coefficient']
+
+# Sort the DataFrame by 'Standardized Coefficient'
+predictor_coeffs = predictor_coeffs.sort_values('Standardized Coefficient')
+
+# Format the 'Standardized Coefficient' column as a percentage with 1 decimal point
+predictor_coeffs['Standardized Coefficient'] = predictor_coeffs['Standardized Coefficient'].map('{:.1%}'.format)
+
+# Print the DataFrame without the index
+print(predictor_coeffs.to_string(index=False))
+
+# Create a bar plot of the standardized coefficients
+plt.figure(figsize=(10, 6))
+plt.barh(predictor_coeffs['Perception'], predictor_coeffs['Standardized Coefficient'])
+plt.xlabel('Standardized Coefficient')
+plt.ylabel('Perception')
+plt.title('Standardized Coefficients')
+plt.tight_layout()
+
+# Save the plot as a PNG file
+plt.savefig('standardized_coefficients.png')
+
+```
+
+
+### LMG/Shapley Values
+
+
+<details>
+<summary>Code</summary>
+
+```{python}
+X = df_drivers[['trust', 'build', 'differs', 'easy', 'appealing', 'rewarding', 'popular', 'service', 'impact']]
+y = df_drivers['satisfaction']
+
+model = xgb.XGBRegressor().fit(X, y)
+
+explainer = shap.Explainer(model)
+shap_values = explainer(X)
+
+mean_shap_values = np.abs(shap_values.values).mean(axis=0)
+
+shap_df = pd.DataFrame(mean_shap_values, index=X.columns, columns=['LMG Value'])
+
+shap_df = shap_df.reset_index()
+
+shap_df.columns = ['Perception', 'LMG Value']
+
+order = ['trust', 'build', 'differs', 'easy', 'appealing', 'rewarding', 'popular', 'service', 'impact']
+shap_df = shap_df.set_index('Perception').reindex(order).reset_index()
+
+shap_df['LMG Value'] = shap_df['LMG Value'].map('{:.1%}'.format)
+
+print(shap_df.to_string(index=False))
+
+
+```
+
+###
+
+```{python}
+#| echo: False
+
+import matplotlib.pyplot as plt
+import xgboost as xgb
+import shap
+import numpy as np
+
+X = df_drivers[['trust', 'build', 'differs', 'easy', 'appealing', 'rewarding', 'popular', 'service', 'impact']]
+y = df_drivers['satisfaction']
+
+# Fit an XGBoost model
+model = xgb.XGBRegressor().fit(X, y)
+
+# Compute SHAP values
+explainer = shap.Explainer(model)
+shap_values = explainer(X)
+
+# Compute the mean absolute SHAP values for each feature
+mean_shap_values = np.abs(shap_values.values).mean(axis=0)
+
+# Convert to a DataFrame
+shap_df = pd.DataFrame(mean_shap_values, index=X.columns, columns=['LMG Value'])
+
+# Reset the index
+shap_df = shap_df.reset_index()
+
+# Rename the columns
+shap_df.columns = ['Perception', 'LMG Value']
+
+# Sort the DataFrame by 'LMG Value'
+shap_df = shap_df.sort_values('LMG Value')
+
+# Format the 'LMG Value' column as a percentage with 1 decimal point
+shap_df['LMG Value'] = shap_df['LMG Value'].map('{:.1%}'.format)
+
+# Print the DataFrame without the index
+print(shap_df.to_string(index=False))
+
+# Create a bar plot of the LMG values
+plt.figure(figsize=(10, 6))
+plt.barh(shap_df['Perception'], shap_df['LMG Value'])
+plt.xlabel('LMG Value')
+plt.ylabel('Perception')
+plt.title('SHAP LMG Values')
+plt.tight_layout()
+
+# Save the plot as a PNG file
+plt.savefig('shap_lmg_values.png')
+```
+
+
+### Johnson's Epsilon
+
+
+<details>
+<summary>Code</summary>
+
+```{python}
+def johnsons_epsilon(X, y):
+    n_features = X.shape[1]
+    indices = np.arange(n_features)
+    subsets = [combinations(indices, i) for i in range(1, n_features + 1)]
+    lr = LinearRegression()
+
+    epsilon = np.zeros(n_features)
+    for subset in subsets:
+        for combination in subset:
+            lr.fit(X[:, combination], y)
+            r_squared = lr.score(X[:, combination], y)
+            for index in combination:
+                epsilon[index] += r_squared
+
+    epsilon /= epsilon.sum()  # Normalize so that epsilon values sum up to 1
+    return epsilon
+
+X = df_drivers[['trust', 'build', 'differs', 'easy', 'appealing', 'rewarding', 'popular', 'service', 'impact']].values
+y = df_drivers['satisfaction'].values
+
+epsilon = johnsons_epsilon(X, y)
+
+epsilon_df = pd.DataFrame(epsilon, index=['trust', 'build', 'differs', 'easy', 'appealing', 'rewarding', 'popular', 'service', 'impact'], columns=['Epsilon Value'])
+
+epsilon_df = epsilon_df.reset_index()
+
+epsilon_df.columns = ['Perception', 'Epsilon Value']
+
+order = ['trust', 'build', 'differs', 'easy', 'appealing', 'rewarding', 'popular', 'service', 'impact']
+epsilon_df = epsilon_df.set_index('Perception').reindex(order).reset_index()
+
+epsilon_df['Epsilon Value'] = epsilon_df['Epsilon Value'].map('{:.1%}'.format)
+
+print(epsilon_df.to_string(index=False))
+
+
+```
+
+###
+
+```{python}
+#| echo: False
+import matplotlib.pyplot as plt
+
+def johnsons_epsilon(X, y):
+    n_features = X.shape[1]
+    indices = np.arange(n_features)
+    subsets = [combinations(indices, i) for i in range(1, n_features + 1)]
+    lr = LinearRegression()
+
+    epsilon = np.zeros(n_features)
+    for subset in subsets:
+        for combination in subset:
+            lr.fit(X[:, combination], y)
+            r_squared = lr.score(X[:, combination], y)
+            for index in combination:
+                epsilon[index] += r_squared
+
+    epsilon /= epsilon.sum()  # Normalize so that epsilon values sum up to 1
+    return epsilon
+
+# Define the predictors and the target
+X = df_drivers[['trust', 'build', 'differs', 'easy', 'appealing', 'rewarding', 'popular', 'service', 'impact']].values
+y = df_drivers['satisfaction'].values
+
+# Compute Johnson's epsilon
+epsilon = johnsons_epsilon(X, y)
+
+# Convert to a DataFrame
+epsilon_df = pd.DataFrame(epsilon, index=['trust', 'build', 'differs', 'easy', 'appealing', 'rewarding', 'popular', 'service', 'impact'], columns=['Epsilon Value'])
+
+# Reset the index
+epsilon_df = epsilon_df.reset_index()
+
+# Rename the columns
+epsilon_df.columns = ['Perception', 'Epsilon Value']
+
+# Sort the DataFrame by 'Epsilon Value'
+epsilon_df = epsilon_df.sort_values('Epsilon Value')
+
+# Format the 'Epsilon Value' column as a percentage with 1 decimal point
+epsilon_df['Epsilon Value'] = epsilon_df['Epsilon Value'].map('{:.1%}'.format)
+
+# Print the DataFrame without the index
+print(epsilon_df.to_string(index=False))
+
+# Create a bar plot of the epsilon values
+plt.figure(figsize=(10, 6))
+plt.barh(epsilon_df['Perception'], epsilon_df['Epsilon Value'])
+plt.xlabel('Epsilon Value')
+plt.ylabel('Perception')
+plt.title('Johnson\'s Epsilon Values')
+plt.tight_layout()
+
+# Save the plot as a PNG file
+plt.savefig('johnsons_epsilon.png')
+
+```
+
+### Mean Decrease in the Gini Coefficient
+
+
+<details>
+<summary>Code</summary>
+
+```{python}
+from sklearn.ensemble import RandomForestRegressor
+from sklearn import tree
+import matplotlib.pyplot as plt
+
+from sklearn.ensemble import RandomForestRegressor
+
+X = df_drivers[['trust', 'build', 'differs', 'easy', 'appealing', 'rewarding', 'popular', 'service', 'impact']]
+y = df_drivers['satisfaction']
+
+model = RandomForestRegressor().fit(X, y)
+
+importances = model.feature_importances_
+
+importances_df = pd.DataFrame(importances, index=X.columns, columns=['Gini Decrease'])
+
+importances_df = importances_df.reset_index()
+
+importances_df.columns = ['Perception', 'Gini Decrease']
+
+order = ['trust', 'build', 'differs', 'easy', 'appealing', 'rewarding', 'popular', 'service', 'impact']
+importances_df = importances_df.set_index('Perception').reindex(order).reset_index()
+
+importances_df['Gini Decrease'] = importances_df['Gini Decrease'].map('{:.1%}'.format)
+
+print(importances_df.to_string(index=False))
+
+
+```
+
+###
+
+```{python}
+#| echo: False
+# Define the predictors and the target
+X = df_drivers[['trust', 'build', 'differs', 'easy', 'appealing', 'rewarding', 'popular', 'service', 'impact']]
+y = df_drivers['satisfaction']
+
+# Fit a RandomForest model
+model = RandomForestRegressor().fit(X, y)
+
+# Get the feature importances
+importances = model.feature_importances_
+
+# Convert to a DataFrame
+importances_df = pd.DataFrame(importances, index=X.columns, columns=['Gini Decrease'])
+
+# Reset the index
+importances_df = importances_df.reset_index()
+
+# Rename the columns
+importances_df.columns = ['Perception', 'Gini Decrease']
+
+# Order the rows
+order = ['trust', 'build', 'differs', 'easy', 'appealing', 'rewarding', 'popular', 'service', 'impact']
+importances_df = importances_df.set_index('Perception').reindex(order).reset_index()
+
+# Format the 'Gini Decrease' column as a percentage with 1 decimal point
+importances_df['Gini Decrease'] = importances_df['Gini Decrease'].map('{:.1%}'.format)
+
+# Print the DataFrame without the index
+print(importances_df.to_string(index=False))
+
+# Get the first decision tree from the random forest
+first_tree = model.estimators_[0]
+
+# Plot the first decision tree
+fig, axes = plt.subplots(nrows = 1,ncols = 1,figsize = (4,4), dpi=800)
+tree.plot_tree(first_tree,
+               feature_names = X.columns.tolist(),  # Convert columns to list
+               filled = True);
+fig.savefig('rf_individualtree.png')
+
+```
+
+
+### Matrix with all the measures
+
+Trust, service, and impact have the highest pearson correlation with satisfaction. Trust, service, and impact also have the highest polychoric correlation with satisfaction. Trust, service, and impact have the highest standardized coefficients. Trust, service, and impact have the highest LMG values. Trust, service, and impact have the highest Johnson's epsilon values. Trust, service, and impact have the highest mean decrease in the gini coefficient from a random forest. This indicates that those are the most important predictors of satisfaction.
+
+<details>
+<summary>Code</summary>
+
+```{python}
+merged_df = pd.merge(pearson_satisfaction_corr, spearman_satisfaction_corr, on='Perception', how='outer', suffixes=('_pearson', '_polychoric'))
+merged_df = pd.merge(merged_df, predictor_coeffs, on='Perception', how='outer')
+merged_df = pd.merge(merged_df, shap_df, on='Perception', how='outer')
+merged_df = pd.merge(merged_df, epsilon_df, on='Perception', how='outer')
+merged_df = pd.merge(merged_df, importances_df, on='Perception', how='outer')
+
+numerical_columns = merged_df.select_dtypes(include=[np.number]).columns.tolist()
+for col in numerical_columns:
+    merged_df[col] = merged_df[col].apply('{:.1%}'.format)
+
+styled_df = merged_df.style.set_table_styles([
+    {'selector': 'th', 'props': [('background', '#606060'), ('color', 'white'), ('font-family', 'verdana')]},
+    {'selector': 'td', 'props': [('font-family', 'verdana')]}
+])
+
+styled_df
+```
+
+###
+
+```{python}
+#| echo: False
+merged_df = pd.merge(pearson_satisfaction_corr, spearman_satisfaction_corr, on='Perception', how='outer', suffixes=('_pearson', '_polychoric'))
+merged_df = pd.merge(merged_df, predictor_coeffs, on='Perception', how='outer')
+merged_df = pd.merge(merged_df, shap_df, on='Perception', how='outer')
+merged_df = pd.merge(merged_df, epsilon_df, on='Perception', how='outer')
+merged_df = pd.merge(merged_df, importances_df, on='Perception', how='outer')
+
+# Format all numerical columns to have 1 decimal point and be a percentage
+numerical_columns = merged_df.select_dtypes(include=[np.number]).columns.tolist()
+for col in numerical_columns:
+    merged_df[col] = merged_df[col].apply('{:.1%}'.format)
+
+# Apply styling to the DataFrame
+styled_df = merged_df.style.set_table_styles([
+    {'selector': 'th', 'props': [('background', '#606060'), ('color', 'white'), ('font-family', 'verdana')]},
+    {'selector': 'td', 'props': [('font-family', 'verdana')]}
+])
+
+# Display the styled DataFrame
+styled_df
+
+```
