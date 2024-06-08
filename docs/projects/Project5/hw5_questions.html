@@ -210,7 +210,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <summary>
 Code
 </summary>
-<div id="aa2a0bd0" class="cell" data-execution_count="1">
+<div id="9a858859" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -270,7 +270,7 @@ Code
 <summary>
 Code
 </summary>
-<div id="5d81c0a8" class="cell" data-execution_count="2">
+<div id="96767b1f" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> find_clusters(X, n_clusters, rseed<span class="op">=</span><span class="dv">2</span>):</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    rng <span class="op">=</span> np.random.RandomState(rseed)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    i <span class="op">=</span> rng.permutation(X.shape[<span class="dv">0</span>])[:n_clusters]</span>
@@ -287,7 +287,7 @@ Code
 <span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        color_map <span class="op">=</span> {<span class="st">'Adelie'</span>: <span class="st">'blue'</span>, <span class="st">'Chinstrap'</span>: <span class="st">'green'</span>, <span class="st">'Gentoo'</span>: <span class="st">'red'</span>}</span>
 <span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>        plt.figure(figsize<span class="op">=</span>(<span class="dv">14</span>, <span class="dv">7</span>))</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>        plt.figure(figsize<span class="op">=</span>(<span class="dv">7</span>, <span class="fl">3.5</span>))</span>
 <span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>        plt.title(<span class="st">'Iteration number '</span> <span class="op">+</span> <span class="bu">str</span>(iteration))</span>
 <span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> species, color <span class="kw">in</span> color_map.items():</span>
 <span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>            mask <span class="op">=</span> df_clusters[<span class="st">'predicted_species'</span>] <span class="op">==</span> species</span>
@@ -314,35 +314,35 @@ Code
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="hw5_questions_files/figure-html/cell-3-output-1.png" width="1090" height="579" class="figure-img"></p>
+<p><img src="hw5_questions_files/figure-html/cell-3-output-1.png" width="569" height="320" class="figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="hw5_questions_files/figure-html/cell-3-output-2.png" width="1090" height="579" class="figure-img"></p>
+<p><img src="hw5_questions_files/figure-html/cell-3-output-2.png" width="569" height="320" class="figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="hw5_questions_files/figure-html/cell-3-output-3.png" width="1090" height="579" class="figure-img"></p>
+<p><img src="hw5_questions_files/figure-html/cell-3-output-3.png" width="569" height="320" class="figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="hw5_questions_files/figure-html/cell-3-output-4.png" width="1090" height="579" class="figure-img"></p>
+<p><img src="hw5_questions_files/figure-html/cell-3-output-4.png" width="569" height="320" class="figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="hw5_questions_files/figure-html/cell-3-output-5.png" width="1090" height="579" class="figure-img"></p>
+<p><img src="hw5_questions_files/figure-html/cell-3-output-5.png" width="569" height="320" class="figure-img"></p>
 </figure>
 </div>
 </div>
@@ -350,39 +350,39 @@ Code
 </details></section>
 <section id="section-1" class="level3">
 <h3 class="anchored" data-anchor-id="section-1"></h3>
-<div id="7aad00e1" class="cell" data-execution_count="3">
+<div id="00670245" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="hw5_questions_files/figure-html/cell-4-output-1.png" width="1090" height="579" class="figure-img"></p>
+<p><img src="hw5_questions_files/figure-html/cell-4-output-1.png" width="569" height="320" class="figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="hw5_questions_files/figure-html/cell-4-output-2.png" width="1090" height="579" class="figure-img"></p>
+<p><img src="hw5_questions_files/figure-html/cell-4-output-2.png" width="569" height="320" class="figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="hw5_questions_files/figure-html/cell-4-output-3.png" width="1090" height="579" class="figure-img"></p>
+<p><img src="hw5_questions_files/figure-html/cell-4-output-3.png" width="569" height="320" class="figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="hw5_questions_files/figure-html/cell-4-output-4.png" width="1090" height="579" class="figure-img"></p>
+<p><img src="hw5_questions_files/figure-html/cell-4-output-4.png" width="569" height="320" class="figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="hw5_questions_files/figure-html/cell-4-output-5.png" width="1090" height="579" class="figure-img"></p>
+<p><img src="hw5_questions_files/figure-html/cell-4-output-5.png" width="569" height="320" class="figure-img"></p>
 </figure>
 </div>
 </div>
@@ -395,7 +395,7 @@ Code
 <summary>
 Code
 </summary>
-<div id="ff4d08ee" class="cell" data-execution_count="4">
+<div id="64a488a9" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>df_penguins <span class="op">=</span> df_penguins.dropna()</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>features <span class="op">=</span> [<span class="st">'bill_length_mm'</span>, <span class="st">'bill_depth_mm'</span>, <span class="st">'flipper_length_mm'</span>, <span class="st">'body_mass_g'</span>]</span>
@@ -435,7 +435,7 @@ Code
 </details></section>
 <section id="section-2" class="level3">
 <h3 class="anchored" data-anchor-id="section-2"></h3>
-<div id="6a8c93d3" class="cell" data-execution_count="5">
+<div id="68f60e01" class="cell" data-execution_count="5">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -452,7 +452,7 @@ Code
 <summary>
 Code
 </summary>
-<div id="f08f7e75" class="cell" data-execution_count="6">
+<div id="7799141f" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>wcss_scores_features <span class="op">=</span> {feature: [] <span class="cf">for</span> feature <span class="kw">in</span> features}</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>silhouette_scores_features <span class="op">=</span> {feature: [] <span class="cf">for</span> feature <span class="kw">in</span> features}</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -476,7 +476,7 @@ Code
 <span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    silhouette_scores_features[feature] <span class="op">=</span> silhouette_scores</span>
 <span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> feature <span class="kw">in</span> features:</span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    fig, axs <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">14</span>, <span class="dv">7</span>))</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    fig, axs <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="fl">6.5</span>, <span class="fl">3.5</span>))</span>
 <span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    axs[<span class="dv">0</span>].plot(n_clusters_range, wcss_scores_features[feature], marker<span class="op">=</span><span class="st">'o'</span>)</span>
 <span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    axs[<span class="dv">0</span>].fill_between(n_clusters_range, wcss_scores_features[feature], color<span class="op">=</span><span class="st">'skyblue'</span>, alpha<span class="op">=</span><span class="fl">0.4</span>)</span>
@@ -495,28 +495,28 @@ Code
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="hw5_questions_files/figure-html/cell-7-output-1.png" width="1333" height="660" class="figure-img"></p>
+<p><img src="hw5_questions_files/figure-html/cell-7-output-1.png" width="638" height="324" class="figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="hw5_questions_files/figure-html/cell-7-output-2.png" width="1333" height="660" class="figure-img"></p>
+<p><img src="hw5_questions_files/figure-html/cell-7-output-2.png" width="636" height="324" class="figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="hw5_questions_files/figure-html/cell-7-output-3.png" width="1333" height="660" class="figure-img"></p>
+<p><img src="hw5_questions_files/figure-html/cell-7-output-3.png" width="652" height="324" class="figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="hw5_questions_files/figure-html/cell-7-output-4.png" width="1333" height="660" class="figure-img"></p>
+<p><img src="hw5_questions_files/figure-html/cell-7-output-4.png" width="631" height="324" class="figure-img"></p>
 </figure>
 </div>
 </div>
@@ -524,32 +524,32 @@ Code
 </details></section>
 <section id="section-3" class="level3">
 <h3 class="anchored" data-anchor-id="section-3"></h3>
-<div id="e08f7ff4" class="cell" data-execution_count="7">
+<div id="1542a22c" class="cell" data-execution_count="7">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="hw5_questions_files/figure-html/cell-8-output-1.png" width="1333" height="660" class="figure-img"></p>
+<p><img src="hw5_questions_files/figure-html/cell-8-output-1.png" width="638" height="324" class="figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="hw5_questions_files/figure-html/cell-8-output-2.png" width="1333" height="660" class="figure-img"></p>
+<p><img src="hw5_questions_files/figure-html/cell-8-output-2.png" width="636" height="324" class="figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="hw5_questions_files/figure-html/cell-8-output-3.png" width="1333" height="660" class="figure-img"></p>
+<p><img src="hw5_questions_files/figure-html/cell-8-output-3.png" width="652" height="324" class="figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="hw5_questions_files/figure-html/cell-8-output-4.png" width="1333" height="660" class="figure-img"></p>
+<p><img src="hw5_questions_files/figure-html/cell-8-output-4.png" width="631" height="324" class="figure-img"></p>
 </figure>
 </div>
 </div>
@@ -561,11 +561,11 @@ Code
 </section>
 <section id="section-4" class="level3">
 <h3 class="anchored" data-anchor-id="section-4"></h3>
-<div id="52833e0c" class="cell" data-execution_count="8">
+<div id="4a744388" class="cell" data-execution_count="8">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="hw5_questions_files/figure-html/cell-9-output-1.png" width="1066" height="945" class="figure-img"></p>
+<p><img src="hw5_questions_files/figure-html/cell-9-output-1.png" width="648" height="530" class="figure-img"></p>
 </figure>
 </div>
 </div>

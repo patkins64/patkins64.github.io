@@ -80,7 +80,7 @@ def find_clusters(X, n_clusters, rseed=2):
 
         color_map = {'Adelie': 'blue', 'Chinstrap': 'green', 'Gentoo': 'red'}
 
-        plt.figure(figsize=(14, 7))
+        plt.figure(figsize=(7, 3.5))
         plt.title('Iteration number ' + str(iteration))
         for species, color in color_map.items():
             mask = df_clusters['predicted_species'] == species
@@ -132,7 +132,7 @@ def find_clusters(X, n_clusters, rseed=2):
         color_map = {'Adelie': 'blue', 'Chinstrap': 'green', 'Gentoo': 'red'}
 
         # Plot the data points with their assigned cluster colors
-        plt.figure(figsize=(14, 7))
+        plt.figure(figsize=(7, 3.5))
         plt.title('Iteration number ' + str(iteration))
         for species, color in color_map.items():
             mask = df_clusters['predicted_species'] == species
@@ -284,7 +284,7 @@ for feature in features:
     silhouette_scores_features[feature] = silhouette_scores
 
 for feature in features:
-    fig, axs = plt.subplots(1, 2, figsize=(14, 7))
+    fig, axs = plt.subplots(1, 2, figsize=(6.5, 3.5))
 
     axs[0].plot(n_clusters_range, wcss_scores_features[feature], marker='o')
     axs[0].fill_between(n_clusters_range, wcss_scores_features[feature], color='skyblue', alpha=0.4)
@@ -338,7 +338,7 @@ for feature in features:
 
 # Plot the WCSS and silhouette scores for each feature
 for feature in features:
-    fig, axs = plt.subplots(1, 2, figsize=(14, 7))
+    fig, axs = plt.subplots(1, 2, figsize=(6.5, 3.5))
 
     axs[0].plot(n_clusters_range, wcss_scores_features[feature], marker='o')
     axs[0].fill_between(n_clusters_range, wcss_scores_features[feature], color='skyblue', alpha=0.4)
@@ -418,7 +418,7 @@ for n_clusters in n_clusters_range:
     data['cluster'] = labels
 
     # Plot the clusters
-sns.pairplot(data[features + ['species']], hue='species', palette=sns.color_palette('hsv', 3))
+sns.pairplot(data[features + ['species']], hue='species', palette=sns.color_palette('hsv', 3), height=1.4)
 plt.show()
 
 
