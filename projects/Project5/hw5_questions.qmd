@@ -1,0 +1,430 @@
+---
+title: "Segmentation Methods"
+author: "Peter Atkins"
+date: today
+---
+
+
+## K-Means
+
+Using the "Palmer Penguins" dataset, we can use the k-means algorithm to cluster the data into groups.  The dataset contains measurements of penguins from three different species: Adelie, Chinstrap, and Gentoo.  The measurements include the length and depth of the penguin's bill, the length of the flipper, and the body mass.  We can use these measurements to cluster the penguins into groups based on their physical characteristics. 3 penguin species are present in the dataset, so we can use k=3 clusters. 3 penguins were removed from the import as they are missing data. I will make plots of the varius steps the algorithm takes so you can "see" the algorithm working.  I will also calculate both the within-cluster-sum-of-squares and silhouette scores and plot the results for various numbers of clusters (ie, K=2,3,...,7) and determine how many clusers are suggested by these two metrics. 
+
+###
+
+
+<details>
+<summary>Code</summary>
+
+```{python}
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import statsmodels.api as sm
+from statsmodels.formula.api import ols
+import statsmodels.formula.api as smf
+import scipy.stats as stats
+from scipy.stats import ttest_ind
+import numpy as np
+from scipy.stats import norm
+from scipy.optimize import minimize
+from scipy.optimize import minimize_scalar
+import pingouin as pg
+import shap
+import xgboost as xgb
+from itertools import combinations
+from sklearn.linear_model import LinearRegression
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.model_selection import train_test_split
+from sklearn.datasets import load_iris
+from sklearn.preprocessing import StandardScaler
+import numpy as np
+from sklearn.preprocessing import StandardScaler
+import matplotlib.pyplot as plt
+from sklearn.metrics import pairwise_distances_argmin
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans
+from sklearn.metrics import silhouette_score
+from sklearn.preprocessing import LabelEncoder
+
+penguin_data = "/Users/peteratkins/Desktop/Website/penguins.csv"
+df_penguins = pd.read_csv(penguin_data)
+
+print(df_penguins.head())
+
+
+```
+
+
+### K-means by hand
+
+This is the first iteration of the k-means algorithm by hand.  The data is plotted with the initial random centers.  The algorithm will continue to iterate until the centers converge. The process is visualized at each step to show how the algorithm is working.  The final clusters are shown below.
+
+<details>
+<summary>Code</summary>
+
+```{python}
+def find_clusters(X, n_clusters, rseed=2):
+    rng = np.random.RandomState(rseed)
+    i = rng.permutation(X.shape[0])[:n_clusters]
+    centers = X[i]
+    
+    iteration = 0
+    while True:
+        labels = pairwise_distances_argmin(X, centers)
+        
+        df_clusters = pd.DataFrame({'labels': labels, 'species': df_penguins['species'].values})
+
+        label_map = df_clusters.groupby('labels')['species'].agg(lambda x: x.value_counts().index[0])
+        df_clusters['predicted_species'] = df_clusters['labels'].map(label_map)
+
+        color_map = {'Adelie': 'blue', 'Chinstrap': 'green', 'Gentoo': 'red'}
+
+        plt.figure(figsize=(14, 7))
+        plt.title('Iteration number ' + str(iteration))
+        for species, color in color_map.items():
+            mask = df_clusters['predicted_species'] == species
+            plt.scatter(X[mask, 0], X[mask, 1], c=color, label=species)
+
+        plt.scatter(centers[:, 0], centers[:, 1], c='black', s=200, alpha=0.5)
+        plt.legend()
+        plt.show()
+        
+        new_centers = np.array([X[labels == i].mean(0) for i in range(n_clusters)])
+        
+        if np.all(centers == new_centers):
+            break
+        centers = new_centers
+        iteration += 1
+    
+    return centers, labels
+
+df_penguins = df_penguins.dropna()
+features = ['bill_length_mm', 'bill_depth_mm', 'flipper_length_mm', 'body_mass_g']
+data_scaled = StandardScaler().fit_transform(df_penguins[features])
+
+centers, labels = find_clusters(data_scaled, 3)
+```
+
+###
+
+```{python}
+#| echo: False
+def find_clusters(X, n_clusters, rseed=2):
+    # 1. Randomly choose clusters
+    rng = np.random.RandomState(rseed)
+    i = rng.permutation(X.shape[0])[:n_clusters]
+    centers = X[i]
+    
+    iteration = 0
+    while True:
+        # 2a. Assign labels based on closest center
+        labels = pairwise_distances_argmin(X, centers)
+        
+        # Create a DataFrame with the cluster labels and actual species
+        df_clusters = pd.DataFrame({'labels': labels, 'species': df_penguins['species'].values})
+
+        # Map the cluster labels to the majority species in each cluster
+        label_map = df_clusters.groupby('labels')['species'].agg(lambda x: x.value_counts().index[0])
+        df_clusters['predicted_species'] = df_clusters['labels'].map(label_map)
+
+        # Create a color map
+        color_map = {'Adelie': 'blue', 'Chinstrap': 'green', 'Gentoo': 'red'}
+
+        # Plot the data points with their assigned cluster colors
+        plt.figure(figsize=(14, 7))
+        plt.title('Iteration number ' + str(iteration))
+        for species, color in color_map.items():
+            mask = df_clusters['predicted_species'] == species
+            plt.scatter(X[mask, 0], X[mask, 1], c=color, label=species)
+
+        # Plot the centers
+        plt.scatter(centers[:, 0], centers[:, 1], c='black', s=200, alpha=0.5)
+        plt.legend()
+        plt.show()
+        
+        # 2b. Find new centers from means of points
+        new_centers = np.array([X[labels == i].mean(0) for i in range(n_clusters)])
+        
+        # 2c. Check for convergence
+        if np.all(centers == new_centers):
+            break
+        centers = new_centers
+        iteration += 1
+    
+    return centers, labels
+
+# Preprocess the data
+df_penguins = df_penguins.dropna()
+features = ['bill_length_mm', 'bill_depth_mm', 'flipper_length_mm', 'body_mass_g']
+data_scaled = StandardScaler().fit_transform(df_penguins[features])
+
+# Find clusters
+centers, labels = find_clusters(data_scaled, 3)
+
+
+```
+
+
+### K-means with sklearn
+
+Using sklearn, we can perform k-means clustering on the penguin data.  The data is scaled and the k-means model is fit to the data.  The cluster assignments and centroids are then used to create a plot of the data points with their assigned cluster colors.  The centroids are also plotted as black points.  The final plot is shown below.
+
+
+<details>
+<summary>Code</summary>
+
+```{python}
+df_penguins = df_penguins.dropna()
+
+features = ['bill_length_mm', 'bill_depth_mm', 'flipper_length_mm', 'body_mass_g']
+data_scaled = StandardScaler().fit_transform(df_penguins[features])
+
+kmeans = KMeans(n_clusters=3, n_init=10, random_state=2)
+
+kmeans.fit(data_scaled)
+
+labels = kmeans.labels_
+centers = kmeans.cluster_centers_
+
+df_clusters = pd.DataFrame({'labels': labels, 'species': df_penguins['species'].values})
+
+label_map = df_clusters.groupby('labels')['species'].agg(lambda x: x.value_counts().index[0])
+df_clusters['predicted_species'] = df_clusters['labels'].map(label_map)
+
+color_map = {'Adelie': 'blue', 'Chinstrap': 'green', 'Gentoo': 'red'}
+
+for species, color in color_map.items():
+    mask = df_clusters['predicted_species'] == species
+    plt.scatter(data_scaled[mask, 0], data_scaled[mask, 1], c=color, label=species)
+
+plt.scatter(centers[:, 0], centers[:, 1], c='black', s=200, alpha=0.5)
+
+plt.title('K-means Clustering with sklearn')
+plt.legend()
+plt.show()
+
+```
+
+###
+
+```{python}
+#| echo: False
+
+# Drop rows with missing values
+df_penguins = df_penguins.dropna()
+
+# Scale the data
+features = ['bill_length_mm', 'bill_depth_mm', 'flipper_length_mm', 'body_mass_g']
+data_scaled = StandardScaler().fit_transform(df_penguins[features])
+
+# Define the k-means model
+kmeans = KMeans(n_clusters=3, n_init=10, random_state=2)
+
+# Fit the model
+kmeans.fit(data_scaled)
+
+# Get the cluster assignments and centroids
+labels = kmeans.labels_
+centers = kmeans.cluster_centers_
+
+# Create a DataFrame with the cluster labels and actual species
+df_clusters = pd.DataFrame({'labels': labels, 'species': df_penguins['species'].values})
+
+# Map the cluster labels to the majority species in each cluster
+label_map = df_clusters.groupby('labels')['species'].agg(lambda x: x.value_counts().index[0])
+df_clusters['predicted_species'] = df_clusters['labels'].map(label_map)
+
+# Create a color map
+color_map = {'Adelie': 'blue', 'Chinstrap': 'green', 'Gentoo': 'red'}
+
+# Plot the data points with their assigned cluster colors
+for species, color in color_map.items():
+    mask = df_clusters['predicted_species'] == species
+    plt.scatter(data_scaled[mask, 0], data_scaled[mask, 1], c=color, label=species)
+
+# Plot the centroids
+plt.scatter(centers[:, 0], centers[:, 1], c='black', s=200, alpha=0.5)
+
+plt.title('K-means Clustering with sklearn')
+plt.legend()
+plt.show()
+```
+
+
+### Within-Cluster-Sum-of-Squares (WCSS) and Silhouette Scores
+
+The WCSS is a measure of the compactness of the clusters, with lower values indicating better clustering. The silhouette score is a measure of how similar an object is to its own cluster compared to other clusters, with higher values indicating better clustering. The WCSS and silhouette scores are calculated for K clusters for each feature - body mass, flipper length, bill depth, and bill length - and plotted below.  
+
+<details>
+<summary>Code</summary>
+
+```{python}
+
+wcss_scores_features = {feature: [] for feature in features}
+silhouette_scores_features = {feature: [] for feature in features}
+
+n_clusters_range = range(2, 10)
+
+for feature in features:
+    data_scaled_feature = StandardScaler().fit_transform(df_penguins[[feature]])
+
+    wcss_scores = []
+    silhouette_scores = []
+
+    for n_clusters in n_clusters_range:
+        kmeans = KMeans(n_clusters=n_clusters, n_init=10, random_state=2)
+
+        kmeans.fit(data_scaled_feature)
+
+        wcss_scores.append(kmeans.inertia_)
+        silhouette_scores.append(silhouette_score(data_scaled_feature, kmeans.labels_))
+
+    wcss_scores_features[feature] = wcss_scores
+    silhouette_scores_features[feature] = silhouette_scores
+
+for feature in features:
+    fig, axs = plt.subplots(1, 2, figsize=(14, 7))
+
+    axs[0].plot(n_clusters_range, wcss_scores_features[feature], marker='o')
+    axs[0].fill_between(n_clusters_range, wcss_scores_features[feature], color='skyblue', alpha=0.4)
+    axs[0].set_title(f'WCSS scores for {feature}')
+    axs[0].set_xlabel('Number of clusters')
+    axs[0].set_ylabel('WCSS score')
+
+    axs[1].plot(n_clusters_range, silhouette_scores_features[feature], marker='o')
+    axs[1].fill_between(n_clusters_range, silhouette_scores_features[feature], color='skyblue', alpha=0.4)
+    axs[1].set_title(f'Silhouette scores for {feature}')
+    axs[1].set_xlabel('Number of clusters')
+    axs[1].set_ylabel('Silhouette score')
+
+    plt.tight_layout()
+    plt.show()
+
+```
+
+###
+
+```{python}
+#| echo: False
+# Initialize lists to store the WCSS and silhouette scores for each feature
+wcss_scores_features = {feature: [] for feature in features}
+silhouette_scores_features = {feature: [] for feature in features}
+
+# Loop over the features
+for feature in features:
+    # Scale the feature
+    data_scaled_feature = StandardScaler().fit_transform(df_penguins[[feature]])
+
+    # Initialize lists to store the WCSS and silhouette scores for each number of clusters
+    wcss_scores = []
+    silhouette_scores = []
+
+    # Loop over the range of clusters
+    for n_clusters in n_clusters_range:
+        # Define the k-means model with n_init set explicitly
+        kmeans = KMeans(n_clusters=n_clusters, n_init=10, random_state=2)
+
+        # Fit the model
+        kmeans.fit(data_scaled_feature)
+
+        # Calculate the WCSS and silhouette score
+        wcss_scores.append(kmeans.inertia_)
+        silhouette_scores.append(silhouette_score(data_scaled_feature, kmeans.labels_))
+
+    # Store the WCSS and silhouette scores for the feature
+    wcss_scores_features[feature] = wcss_scores
+    silhouette_scores_features[feature] = silhouette_scores
+
+# Plot the WCSS and silhouette scores for each feature
+for feature in features:
+    fig, axs = plt.subplots(1, 2, figsize=(14, 7))
+
+    axs[0].plot(n_clusters_range, wcss_scores_features[feature], marker='o')
+    axs[0].fill_between(n_clusters_range, wcss_scores_features[feature], color='skyblue', alpha=0.4)
+    axs[0].set_title(f'WCSS scores for {feature}')
+    axs[0].set_xlabel('Number of clusters')
+    axs[0].set_ylabel('WCSS score')
+
+    axs[1].plot(n_clusters_range, silhouette_scores_features[feature], marker='o')
+    axs[1].fill_between(n_clusters_range, silhouette_scores_features[feature], color='skyblue', alpha=0.4)
+    axs[1].set_title(f'Silhouette scores for {feature}')
+    axs[1].set_xlabel('Number of clusters')
+    axs[1].set_ylabel('Silhouette score')
+
+    plt.tight_layout()
+    plt.show()
+
+
+```
+
+
+
+
+
+
+### Additional Clustering by Species and Feature
+
+The clustering results can be visualized by plotting the data points with their assigned cluster colors for each feature.  The centroids are also plotted as black points.  The final plots are shown below. The reason some parts of the graph look like clusters and others look like normal distributions is because of the nature of the data and the features. Some features may be more effective at separating the species into distinct clusters, while others may not show clear separation. The normal distributions along the diagonal represent the distribution of individual features, not the clusters.
+
+
+### 
+
+```{python}
+#| echo: False
+import warnings 
+warnings.filterwarnings("ignore", category=FutureWarning)
+
+def find_clusters(X, n_clusters, rseed=2):
+    # 1. Randomly choose clusters
+    rng = np.random.RandomState(rseed)
+    i = rng.permutation(X.shape[0])[:n_clusters]
+    centers = X[i]
+    
+    while True:
+        # 2a. Assign labels based on closest center
+        labels = pairwise_distances_argmin(X, centers)
+        
+        # 2b. Find new centers from means of points
+        new_centers = np.array([X[labels == i].mean(0) for i in range(n_clusters)])
+        
+        # 2c. Check for convergence
+        if np.all(centers == new_centers):
+            break
+        centers = new_centers
+    
+    return centers, labels
+
+# Load the Palmer Penguins dataset
+data = sns.load_dataset('penguins')
+
+# Preprocess the data
+data = data.dropna()
+features = ['bill_length_mm', 'bill_depth_mm', 'flipper_length_mm', 'body_mass_g']
+data_scaled = StandardScaler().fit_transform(data[features])
+
+# Replace inf and -inf with NaN
+data_scaled = np.nan_to_num(data_scaled, nan=np.nan, posinf=np.nan, neginf=np.nan)
+
+# Define the range of clusters you want to try
+n_clusters_range = range(2, 10)
+
+# Loop over the range of clusters
+for n_clusters in n_clusters_range:
+    # Find clusters
+    centers, labels = find_clusters(data_scaled, n_clusters)
+
+    # Add labels to the dataframe
+    data['cluster'] = labels
+
+    # Plot the clusters
+sns.pairplot(data[features + ['species']], hue='species', palette=sns.color_palette('hsv', 3))
+plt.show()
+
+
+```
+
+
+
+
+
